@@ -1,0 +1,180 @@
+.misCursos{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+.containerCursosDocente{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 70%;
+    gap: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem;
+    background-color: #96A78D;
+}
+.cursoCard{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #dbdfda;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 150px;
+    margin: 10px 0;
+}
+.botonesCurso{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+.botonesCurso button{
+    width: 150px;
+    height: auto;
+    background-color: #6365f1;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.botonesCurso button:hover{
+    background-color: #4d4dec;
+}
+
+.containerAlumnosCurso{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width:50vw;
+    gap: 1rem;
+    margin: 1rem;
+    background-color: #96A78D;
+}
+.alumno{
+    width: 45vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #dbdfda;
+    justify-content: space-around;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+    gap: 3rem;
+}
+.botonesAsistencia{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.presente{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #4ed405;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+}
+.ausente{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #ff0000;
+    justify-content: center;
+    padding: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
+}
+
+.containerDetallesCurso{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+.informacion{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+
+/* modal agregar estudiante */
+
+.agregarEstudiante{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    height: 350px;
+    width: auto;
+    justify-content: center;
+    gap: 1rem;
+}
+.imagenEstudiante{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    height: 150px;
+    width: 300px;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.imagenPreview{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    height: 150px;
+    width: 300px;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* lista asistencia */
+.containerAlumnosCurso{
+    display: block;
+    height: 80vh;
+    width:50vw;
+    gap: 1rem;
+    margin: 1rem;
+    background-color: #96A78D;
+    padding-left: 50px;
+    overflow-x: auto;
+}
+
+.imagenAlumno{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height:120px;
+    width: 120px;
+    justify-content: center;
+    gap: 1rem;
+}

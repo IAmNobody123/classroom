@@ -1,0 +1,105 @@
+/* src/pages/Reportes.css */
+
+.reportes-container {
+  padding: 30px;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f4f6f8;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.formulario-reporte {
+  display: grid;
+  gap: 15px;
+  width: 500px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+.formulario-reporte select, .formulario-reporte input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+.formulario-reporte label {
+  font-weight: bold;
+  color: #555;
+}
+
+.formulario-reporte select,
+.formulario-reporte input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.formulario-reporte button {
+  padding: 10px 15px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.formulario-reporte button:hover {
+  background-color: #357abd;
+}
+
+.tabla-reporte {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.tabla-reporte h2 {
+  margin-bottom: 15px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table thead {
+  background-color: #4a90e2;
+  color: white;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+.pdf{
+  margin: 10px;
+  padding: 10px;
+  background-color: #df2a2a;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.excel{
+  margin: 10px;
+  padding: 10px;
+  background-color: #6dc43f;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+}

@@ -1,0 +1,76 @@
+.addCurso {
+  display: flex;
+  justify-content: start;
+  margin-bottom: 20px;
+}
+
+.bodyCursos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:10px;
+  height: 450px;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerCardCurso {
+  display: flex;
+  width: 30%;
+  height: 25vh;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #96a78d;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+.cardCurso{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #96a78d;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.form-class {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+}
+.form-class label {
+  width: 300px;
+}
+.form-class input {
+  width: 280px;
+  border: 1px solid black;
+  padding-left: 20px;
+  background-color: white;
+  color: black;
+  font-size: 15px;
+}
+
+.form-class textarea {
+  width: 280px;
+  height: 80px;
+  padding-left: 20px;
+  padding-top: 10px;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 0.6rem;
+  color: black;
+  font-size: 15px;
+}
+.form-class select {
+  width: 300px;
+  height: 60px;
+  padding-left: 20px;
+    border: 1px solid black;
+  background-color: white;
+  color: black;
+}
+

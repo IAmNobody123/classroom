@@ -1,0 +1,80 @@
+.juegos-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+.titulo {
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+/* Filtros */
+.filtro-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.filtro-btn {
+  padding: 10px 18px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+  color: black;
+}
+
+.filtro-btn.activo {
+  background: #0cd60c;
+  color: white;
+  border-color: #0cd60c;
+}
+
+.filtro-btn.todos {
+  background: #2eff2e;
+  border-color: #2eff2e;
+}
+
+/* Tarjetas de juegos */
+.juegos-grid {
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  padding: 20px;
+  border: 1px solid #aaa;
+}
+
+.juego-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.juego-img {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.juego-nombre {
+  font-size: 18px;
+  margin: 12px 0;
+}
+
+.btn-escoger {
+  background: #00e227;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-escoger:hover {
+  background: #00c420;
+}

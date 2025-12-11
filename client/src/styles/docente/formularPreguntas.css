@@ -1,0 +1,121 @@
+
+
+.formular-preguntas-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.subtitle {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.btn-nueva-pregunta {
+  margin-top: 10px;
+  padding: 10px 20px;
+  float: right;
+  cursor: pointer;
+}
+/*  */
+
+.carousel-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.seleccionarCurso{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.curso-card {
+  width: 15vw;
+  height: 30vh;
+  background: #f4f4f4;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: space-around;
+}
+
+.btn-ver {
+  padding: 6px 12px;
+  background: green;
+  color: white;
+  border: none;
+  width: fit-content;
+  cursor: pointer;
+  margin: 0 auto;
+}
+/*  */
+.lista-materiales {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.material-item {
+  display: flex;
+  justify-content: space-between;
+  background: #eaeaea;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.material-title {
+  font-weight: bold;
+}
+
+.btn-agregar {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+/*  */
+.formulario-pregunta-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+}
+
+.formulario-left {
+  width: 60%;
+}
+
+.alternativas-list li {
+  margin: 6px 0;
+}
+
+.formulario-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagen-box {
+  width: 150px;
+  height: 120px;
+  background: #dcdcdc;
+  border: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
