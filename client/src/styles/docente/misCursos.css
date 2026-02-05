@@ -1,180 +1,358 @@
-.misCursos{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
+.misCursos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.containerCursosDocente{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 70%;
-    gap: 1rem;
-    border-radius: 0.5rem;
-    margin: 1rem;
-    background-color: #96A78D;
+.misCursos > h2 {
+  text-align: center;
+  font-size: 2rem;
+  padding-bottom: 1rem;
+  color: var(--guinda);
 }
-.cursoCard{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #dbdfda;
-    justify-content: center;
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: 150px;
-    margin: 10px 0;
+.containerCursosDocente {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 70%;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem;
+  background-color: var(--blanco-calido);
 }
-.botonesCurso{
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+.cursoCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--cards);
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 150px;
+  margin: 10px 0;
 }
-.botonesCurso button{
-    width: 150px;
-    height: auto;
-    background-color: #6365f1;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.botonesCurso {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
-
-.botonesCurso button:hover{
-    background-color: #4d4dec;
-}
-
-.containerAlumnosCurso{
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    width:50vw;
-    gap: 1rem;
-    margin: 1rem;
-    background-color: #96A78D;
-}
-.alumno{
-    width: 45vw;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #dbdfda;
-    justify-content: space-around;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
-    gap: 3rem;
-}
-.botonesAsistencia{
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
+.botonesCurso button {
+  width: 150px;
+  height: auto;
+  background-color: var(--guinda);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.presente{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #4ed405;
-    justify-content: center;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
-}
-.ausente{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: #ff0000;
-    justify-content: center;
-    padding: 1rem;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px 0;
+.botonesCurso button:hover {
+  background-color: #4d4dec;
 }
 
-.containerDetallesCurso{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
+.containerAlumnosCurso {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 1rem;
+  background-color: var(--guinda-hover);
 }
-.informacion{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
+.alumno {
+  width: 45vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #dbdfda;
+  justify-content: space-around;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+  gap: 3rem;
+}
+.botonesAsistencia {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.presente {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #4ed405;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+}
+.ausente {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #ff0000;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+}
+
+.containerDetallesCurso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+}
+.informacion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
 }
 
 /* modal agregar estudiante */
 
-.agregarEstudiante{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    height: 350px;
-    width: auto;
-    justify-content: center;
-    gap: 1rem;
+.agregarEstudiante {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  height: 350px;
+  width: auto;
+  justify-content: center;
+  gap: 1rem;
 }
-.imagenEstudiante{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    height: 150px;
-    width: 300px;
-    justify-content: center;
-    gap: 1rem;
+.imagenEstudiante {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  height: 150px;
+  width: 300px;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.imagenPreview{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 10px;
-    padding: 10px;
-    height: 150px;
-    width: 300px;
-    justify-content: center;
-    gap: 1rem;
+.imagenPreview {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  height: 150px;
+  width: 300px;
+  justify-content: center;
+  gap: 1rem;
 }
 
 /* lista asistencia */
-.containerAlumnosCurso{
-    display: block;
-    height: 80vh;
-    width:50vw;
-    gap: 1rem;
-    margin: 1rem;
-    background-color: #96A78D;
-    padding-left: 50px;
-    overflow-x: auto;
+.containerAlumnosCurso {
+  display: block;
+  gap: 1rem;
+  margin: 1rem;
+  background-color: var(--guinda-hover);
+  padding-left: 50px;
+  overflow-x: auto;
 }
 
-.imagenAlumno{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    height:120px;
-    width: 120px;
-    justify-content: center;
-    gap: 1rem;
+.imagenAlumno {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 120px;
+  width: 120px;
+  justify-content: center;
+  gap: 1rem;
+}
+/* calendario */
+.containerDetallesCurso {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.react-calendar {
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  background-color: var(--blanco-calido);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+}
+
+/* Header */
+.react-calendar__navigation button {
+  color: var(--guinda);
+  font-weight: bold;
+  background: none;
+  border-radius: 6px;
+}
+
+.react-calendar__navigation button:hover {
+  background-color: rgba(128, 0, 32, 0.1);
+}
+
+/* Días */
+.react-calendar__tile {
+  border-radius: 8px;
+  padding: 10px 6px;
+  transition: background 0.2s ease;
+}
+
+.react-calendar__tile:hover {
+  background-color: var(--gris-claro);
+}
+
+/* Día seleccionado */
+.react-calendar__tile--active {
+  background-color: var(--guinda);
+  color: white;
+}
+
+.react-calendar__tile--active:hover {
+  background-color: var(--guinda-hover);
+}
+
+.dia-con-asistencia {
+  background-color: #e6f4ea !important;
+  color: #1b5e20;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.dia-con-asistencia:hover {
+  background-color: #c8e6c9 !important;
+}
+
+.detalle-fecha {
+  color: var(--guinda);
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.react-calendar__tile,
+.react-calendar__tile button {
+  color: #000 !important;
+}
+
+/* asistencia */
+.modal-content {
+  max-height: 90vh; 
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  flex-shrink: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.modal-body {
+  flex: 1;
+  overflow-y: auto;          
+  padding: 20px;
+}
+
+.modalAsistencia {
+  display: flex;
+  height: 100vh !important;
+  min-height: none;
+  max-height: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.containerAlumnosCurso {
+  display: flex;
+  flex-direction: row;
+  border-radius: 1.1rem;
+}
+
+.containerAlumnosCurso h3 {
+  text-align: center;
+  color: var(--gris-claro);
+}
+
+.alumno {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 15px;
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid var(--gris-claro);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.imagenAlumno {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--guinda);
+}
+.cardAlumno p {
+  margin: 0;
+  font-weight: 600;
+  color: var(--gris-oscuro);
+}
+
+.botonesAsistencia {
+  display: flex;
+  gap: 10px;
+}
+
+.presente {
+  background-color: var(--verde-bg);
+  color: var(--verde);
+  border: 1px solid var(--verde);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.presente:hover {
+  background-color: var(--verde);
+  color: white;
+}
+
+.ausente {
+  background-color: var(--rojo-bg);
+  color: var(--rojo);
+  border: 1px solid var(--rojo);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ausente:hover {
+  background-color: var(--rojo);
+  color: white;
+}
+
+.presente:disabled,
+.ausente:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(60%);
 }

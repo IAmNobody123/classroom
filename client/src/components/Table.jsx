@@ -21,12 +21,12 @@ const Table= ({ columns, data }) => {
             </tr>
           ) : (
             data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+              <tr  key={rowIndex}>
                 {columns.map((col, colIndex) => (
                   col === "opciones" ? (
-                    <td key={colIndex}>
-                      <button className="action-button">Ver detalles</button>
-                      <button className="action-button">Eliminar</button>
+                    <td className="opcionesAdminUsuario" key={colIndex}>
+                      <button className="action-button ver">Ver detalles</button>
+                      <button className="action-button eliminar">Eliminar</button>
                     </td>
                   ) : (
                     <td key={colIndex}>{row[col]}</td>

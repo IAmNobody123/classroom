@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import "../../styles/director/gestionUsuarios.css";
 import Modal from "../../components/Modal";
-import { getListUsers, registerUser } from "../../front-back/apiDirector";
+import {
+  getListUsers,
+  registerUser,
+} from "../../front-back/apiDirector";
 import Swal from "sweetalert2";
 import Table from "../../components/Table";
 
@@ -17,7 +20,7 @@ function GestionUsuarios() {
     imagen: null,
     imagenPreview: "",
   });
-  const [users, setUsers] = useState([]); 
+  const [users, setUsers] = useState([]);
   useEffect(() => {
     if (alerta.mensaje) {
       Swal.fire({
@@ -52,9 +55,9 @@ function GestionUsuarios() {
     }
 
     const response = await registerUser(formData);
-    
+
     if (response.success) {
-      getDataUsers(); // Actualiza la lista de usuarios después de agregar uno nuevo
+      getDataUsers();
       handleCerrarModal();
       setAlerta({
         mensaje: "Usuario creado exitosamente",
@@ -76,7 +79,7 @@ function GestionUsuarios() {
     });
   };
 
-  const columns = ["id", "nombre", "correo","opciones"];
+  const columns = [ "nombre", "correo", "opciones"];
 
   const getDataUsers = async () => {
     const result = await getListUsers();
@@ -104,67 +107,66 @@ function GestionUsuarios() {
         >
           <form className="formModal" onSubmit={handleSubmit}>
             <div className="boxInformacion">
-              <div className="formGroup boxName">
-                <label>Nombre</label>
-                <input
-                  type="text"
-                  placeholder="Nombre"
-                  value={data.nombre}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      nombre: e.target.value,
-                    }))
-                  }
-                />
-              </div>
+              <div className="inputsForm">
+                <div className="formGroup boxName">
+                  <label>Nombre</label>
+                  <input
+                    type="text"
+                    placeholder="Nombre"
+                    value={data.nombre}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        nombre: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
 
-              <div className="formGroup boxLastName">
-                <label>Apellido</label>
-                <input
-                  type="text"
-                  placeholder="Apellido"
-                  value={data.apellido}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      apellido: e.target.value,
-                    }))
-                  }
-                />
-              </div>
+                <div className="formGroup boxLastName">
+                  <label>Apellido</label>
+                  <input
+                    type="text"
+                    placeholder="Apellido"
+                    value={data.apellido}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        apellido: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="formGroup boxEmail">
+                  <label>Correo</label>
+                  <input
+                    type="email"
+                    placeholder="Correo"
+                    value={data.correo}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        correo: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
 
-              <div className="formGroup boxEmail">
-                <label>Correo</label>
-                <input
-                  type="email"
-                  placeholder="Correo"
-                  value={data.correo}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      correo: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-
-              <div className="formGroup boxPassword">
-                <label>Contraseña</label>
-                <input
-                  type="password"
-                  placeholder="Contraseña"
-                  value={data.contrasena}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      contrasena: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-
-              <div className="formGroup boxRol">
+                <div className="formGroup boxPassword">
+                  <label>Contraseña</label>
+                  <input
+                    type="password"
+                    placeholder="Contraseña"
+                    value={data.contrasena}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        contrasena: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="formGroup boxRol">
                 <label>Rol</label>
                 <select
                   value={data.rol}
@@ -178,14 +180,29 @@ function GestionUsuarios() {
                   <option value="director">Director</option>
                   <option value="docente">Docente</option>
                 </select>
-                <button className="buttonModal" type="submit">
-                  Crear
-                </button>
+                
               </div>
+              </div>
+
+              
             </div>
 
             <div className="boxImg">
               <div className="boxImage">
+                {data.imagenPreview && (
+                  <div style={{ marginTop: "10px" }}>
+                    <img
+                      className="previewImage"
+                      src={data.imagenPreview}
+                      alt="Vista previa"
+                      style={{
+                        maxWidth: "20rem",
+                        maxHeight: "20rem",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </div>
+                )}
                 <label>Imagen</label>
                 <input
                   type="file"
@@ -195,26 +212,16 @@ function GestionUsuarios() {
               </div>
 
               {/* Mostrar preview si hay imagen */}
-              {data.imagenPreview && (
-                <div style={{ marginTop: "10px" }}>
-                  <img
-                    src={data.imagenPreview}
-                    alt="Vista previa"
-                    style={{
-                      maxWidth: "200px",
-                      maxHeight: "200px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </div>
-              )}
+              <button className="buttonModal" type="submit">
+                  Crear
+                </button>
             </div>
+            
           </form>
         </Modal>
       </div>
-      
-      <Table columns={columns} data={users} />
 
+      <Table columns={columns} data={users} />
     </div>
   );
 }

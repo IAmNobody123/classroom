@@ -1,4 +1,16 @@
-export default function MaterialItem({ titulo, descripcion, fecha, curso }) {
+import { useState } from "react";
+import Modal from "../Modal";
+import { getMaterialById } from "../../front-back/apiDocenteCursos";
+
+export default function MaterialItem({ titulo, descripcion, fecha, curso, id }) {
+  const [showModal, setShowModal] = useState(false);
+  const [material, setMaterial] = useState(null);
+
+  const handleModal = async () => {
+    const res = await getMaterialById(id);
+    setMaterial(res);
+    setShowModal(!showModal);
+  };
   return (
     <div className="material-item">
       <div className="material-info">
@@ -10,8 +22,22 @@ export default function MaterialItem({ titulo, descripcion, fecha, curso }) {
         <p><strong>Curso:</strong> {curso}</p>
       </div>
       <div className="material-button">
-        <button>Ver material</button>
+        <button onClick={handleModal}>Ver material</button>
       </div>
+      <Modal
+        isOpen={showModal}
+        onClose={handleModal}
+        title={titulo}
+      >
+        {/* CONTENIDO DEL MODAL */}
+        <iframe
+          src={``}
+          title={titulo}
+          width="100%"
+          height="500px"
+          style={{ border: "none" }}
+        />
+      </Modal>
     </div>
   );
 }

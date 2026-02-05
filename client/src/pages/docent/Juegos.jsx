@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../../styles/docente/juegos.css";
+import Toast from "../../components/Toast";
 
 export default function Juegos() {
   const [filtro, setFiltro] = useState("TODOS");
@@ -7,40 +8,48 @@ export default function Juegos() {
   const juegos = [
     {
       id: 1,
-      nombre: "Adivina la palabra",
+      nombre: "COKITOS",
       categoria: "TEA",
-      imagen: "/img/adivinaPalabra.png",
+      url: "https://www.cokitos.com/juego-clasificar-por-colores/play/",
+      imagen: "/juegos/juego1.png",
     },
     {
       id: 2,
-      nombre: "WORDL",
+      nombre: "BUSCAR ELEMENTOS ESCONDIDOS",
       categoria: "TEA",
-      imagen: "/img/wordl.png",
+      url: "https://www.educaenvivo.com/juegos-educativos-online/juego-buscar-elementos-escondidos/",
+      imagen: "/juegos/juego2.png",
     },
     {
       id: 3,
-      nombre: "Secuencia de colores",
+      nombre: "JUEGOS ARCO IRIS",
       categoria: "TDAH",
-      imagen: "/img/secuencia.png",
+      url: "https://www.juegosarcoiris.com/juegos",
+      imagen: "/juegos/juego3.png",
     },
     {
       id: 4,
-      nombre: "MEMORAMA",
+      nombre: "ARBOL ABC",
       categoria: "TDAH",
-      imagen: "/img/memorama.png",
+      url: "https://arbolabc.com/",
+      imagen: "/juegos/juego4.png",
     },
   ];
-
+  const handleEscoger = (url) => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
   const juegosFiltrados =
     filtro === "TODOS"
       ? juegos
       : juegos.filter((juego) => juego.categoria === filtro);
+  useEffect(() => {
+    Toast("Juegos", "Juegos cargados", "success");
+  },[filtro])
 
   return (
     <div className="juegos-container">
       <h1 className="titulo">Selecciona el juego</h1>
 
-      {/* Filtros */}
       <div className="filtro-container">
         <button
           className={`filtro-btn ${filtro === "TEA" ? "activo" : ""}`}
@@ -68,11 +77,20 @@ export default function Juegos() {
       <div className="juegos-grid">
         {juegosFiltrados.map((j) => (
           <div className="juego-card" key={j.id}>
-            <img src={j.imagen} alt={j.nombre} className="juego-img" />
+            <img
+              src={j.imagen}
+              alt={j.nombre}
+              className="juego-img"
+            />
 
             <h3 className="juego-nombre">{j.nombre}</h3>
 
-            <button className="btn-escoger">Escoger</button>
+            <button
+              className="btn-escoger"
+              onClick={() => handleEscoger(j.url)}
+            >
+              Escoger
+            </button>
           </div>
         ))}
       </div>

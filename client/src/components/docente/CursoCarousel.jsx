@@ -5,6 +5,10 @@ export default function CursoCarousel( {setIdCurso} ) {
   const user = localStorage.getItem("user");
   const id = JSON.parse(user).id;
   const [misCursos, setMisCursos] = useState([]);
+  
+    const [startIndex, setStartIndex] = useState(0);
+    const itemsPerPage = 1;
+    const endIndex = startIndex + itemsPerPage;
 
 
   const dataCursos = async (id) => {
@@ -21,10 +25,6 @@ export default function CursoCarousel( {setIdCurso} ) {
     setIdCurso(id);
     console.log(id);
   };
-
-  const [startIndex, setStartIndex] = useState(0);
-  const itemsPerPage = 1;
-  const endIndex = startIndex + itemsPerPage;
 
   const handleNext = () => {
     if (endIndex < misCursos.length) {

@@ -7,12 +7,11 @@
   padding: 0;
 }
 .sidebarBox {
-  width: 35vh;
+  min-width: 20%;
   height: 100vh;
   background-color: #96a78d;
   padding: 0 10px;
   color: #f0f0f0;
-  position: fixed;
 }
 
 .sidebarTitle {
@@ -62,11 +61,12 @@
 }
 
 .boxMain {
-  margin-left: 18vw;
   flex: 1;
   padding: 20px;
   background-color: #d9e9cf;
   color: black;
+  display: flex;
+  flex-direction: column;
 }
 
 /* modal */
@@ -114,4 +114,55 @@
 }
 .modal-body {
   margin-top: 1rem;
+}
+/*  */
+
+.sidebarBox {
+  width: 35vh;
+  height: 100vh;
+  background-color: var(--guinda);
+  padding: 0 10px;
+  color: var(--blanco-calido);
+  position: fixed;
+}
+
+.sidebarTitle {
+  color: var(--blanco-calido);
+}
+
+.sidebarLink {
+  color: var(--blanco-calido);
+  background-color: transparent;
+}
+
+.sidebarLink:hover {
+  background-color: rgba(255,255,255,0.15);
+}
+
+.sidebarLink.active {
+  background-color: var(--blanco-calido);
+  color: var(--guinda);
+}
+.boxMain {
+  margin-left: 20%;
+  flex: 1;
+  padding: 20px;
+  background-color: var(--fondo-app);
+  color: var(--gris-oscuro);
+  padding-left: 4%;
+}
+
+.cerrarSesion{
+  display: flex;
+  margin: 50vh auto;
+  color: var(--blanco-calido);
+  background-color: var(--guinda-hover);
+  font-weight: bold;
+
+}
+.cerrarSesion:hover{
+  background-color: var(--gris-medio);
+  color: var(--guinda);
+  font-weight: bold;
+  border-color: var(--guinda-hover);
 }

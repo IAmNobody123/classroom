@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import MaterialItem from './MaterialItem';
 import { listadoMaterialCurso } from '../../front-back/apiDocenteCursos';
 
-export default function UltimosMateriales(refresh) {
+export default function UltimosMateriales({ refresh }) {
   const [materiales, setMateriales] = useState([]);
 
   useEffect(() => {
@@ -10,7 +10,7 @@ export default function UltimosMateriales(refresh) {
     response.then((data) => {
       setMateriales(data);
     });
-  },[refresh]);
+  }, [refresh]);
 
   return (
     <div className="ultimos-materiales">
@@ -19,8 +19,9 @@ export default function UltimosMateriales(refresh) {
       {materiales.map((mat, index) => (
         <MaterialItem
           key={index}
+          id={mat.id}
           titulo={mat.titulo}
-          fecha={(mat.subido).substring(0, 10)}
+          fecha={mat.subido ? mat.subido.substring(0, 10) : ""}
           curso={mat.nombre}
         />
       ))}

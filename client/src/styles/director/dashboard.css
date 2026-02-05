@@ -1,13 +1,30 @@
+:root {
+  /* Primario */
+  --guinda: #800020;
+  --guinda-hover: #660019;
+
+  /* Neutros */
+  --blanco-calido: #FAFAFA;
+  --gris-claro: #E0E0E0;
+  --gris-medio: #BDBDBD;
+  --gris-oscuro: #333333;
+
+  /* Estados */
+  --fondo-app: #F5F5F5;
+  --card-bg: #FFFFFF;
+  --borde-suave: #DDDDDD;
+}
+
+
 /* src/pages/Dashboard.css */
 
 .dashboard {
-  padding: 30px;
   font-family: "Segoe UI", sans-serif;
   background-color: lightgray;
-  min-height: auto;
 }
 
 .dashboard-title {
+  text-align: center;
   font-size: 2.5rem;
   margin-bottom: 10px;
   color: #333;
@@ -26,12 +43,15 @@
 }
 
 .card {
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  align-items: center;
   background-color: white;
-  padding: 20px 30px;
+  padding: 20px ;
   border-radius: 10px;
   flex: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
 }
 
 .card h3 {
@@ -57,4 +77,29 @@
     display: flex;
     flex-direction: row;
     gap: 1rem;
+}
+/*  */
+.dashboard {
+  background-color: var(--fondo-app);
+}
+
+.dashboard-title {
+  color: var(--guinda);
+}
+
+.dashboard-subtitle {
+  color: #666;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--borde-suave);
+}
+
+.card p {
+  color: var(--guinda);
+}
+.dashboard-chart {
+  background-color: var(--card-bg);
+  border: 1px solid var(--borde-suave);
 }

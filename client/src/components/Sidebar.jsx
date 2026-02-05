@@ -9,13 +9,14 @@ const menuItems = {
     { path: "/mis-cursos", label: "Mis Cursos" },
     { path: "/subir-material", label: "Subir material" },
     { path: "/formular-preguntas", label: "Formular Preguntas" },
+    { path: "/calificar-alumnos", label: "Calificar Alumnos" },
     { path: "/plan-trabajo", label: "Plan de trabajo" },
     { path: "/juegos", label: "Juegos disponibles" },
   ],
   director: [
     { path: "/dashboard", label: "Dashboard" },
     { path: "/gestionUsuarios", label: "Gestión de Usuarios" },
-    {path: "/cursos", label: "Cursos"},
+    { path: "/cursos", label: "Cursos" },
     { path: "/reportes", label: "Reportes" },
   ],
 };
@@ -43,7 +44,15 @@ export default function Sidebar({ role }) {
       </ul>
       <div className="sidebarFooter">
         <Link to="/login" className="logoutButton">
-          <button onClick={() => { logout(); navigate("/login",{ replace: true }) }}>Cerrar sesión</button>
+          <button
+            className="cerrarSesion"
+            onClick={() => {
+              logout();
+              navigate("/login", { replace: true });
+            }}
+          >
+            Cerrar sesión
+          </button>
         </Link>
       </div>
     </div>

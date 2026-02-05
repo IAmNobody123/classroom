@@ -1,6 +1,7 @@
 import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import useAuth from "../context/useAuth";
+import "../App.css";
 
 export default function Layout() {
   const { user } = useAuth(); 

@@ -3,11 +3,16 @@ import {
   getListCursosDocente,
   insertAlumnoCurso,
   listAlumnosCursos,
+  getFechasAsistencia,
+  getAsistenciaFecha,
 } from "../../front-back/apiDocenteCursos";
 import "../../styles/docente/misCursos.css";
+import "../../App.css";
 import Modal from "../../components/Modal";
 import Swal from "sweetalert2";
 import ModalAsistencia from "../../components/docente/ModalAsistencia";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 export default function MisCursos() {
   const [misCursos, setMisCursos] = useState([]);
@@ -23,6 +28,13 @@ export default function MisCursos() {
   const [file, setFile] = useState(null);
   const [nombreCurso, setNombreCurso] = useState("");
   const [alumnos, setAlumnos] = useState([]);
+
+  // Calendar State
+  const [fechasAsistencia, setFechasAsistencia] = useState([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(
+    new Date(),
+  );
+  const [listaAsistenciaDia, setListaAsistenciaDia] = useState(null);
 
   const user = localStorage.getItem("user");
   const id = JSON.parse(user).id;
@@ -56,12 +68,66 @@ export default function MisCursos() {
     setIsOpenAgregar(true);
   };
 
-  const handleAsistencia =  async(nombre,idCurso) => {
+  const handleAsistencia = async (nombre, idCurso) => {
     setNombreCurso(nombre);
     setIdCurso(idCurso);
     const response = await listAlumnosCursos(idCurso);
     setAlumnos(response);
     setIsOpenAsistencia(true);
+  };
+
+  // New History Handler
+  const handleVerDetalles = async (cursoId) => {
+    setIdCurso(cursoId);
+    setFechasAsistencia([]); // Clear previous
+    setListaAsistenciaDia(null);
+    try {
+      const fechas = await getFechasAsistencia(cursoId);
+      // fechas array of "YYYY-MM-DD"
+      setFechasAsistencia(fechas || []);
+      setIsOpenDetalles(true);
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "No se pudo cargar el historial", "error");
+    }
+  };
+
+  const onDateChange = async (date) => {
+    setFechaSeleccionada(date);
+    // Check if this date has attendance
+    // date is Date object. Convert to YYYY-MM-DD local
+    const offsetDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000,
+    );
+    const dateString = offsetDate.toISOString().split("T")[0];
+
+    if (fechasAsistencia.includes(dateString)) {
+      try {
+        // Fetch details
+        const detalles = await getAsistenciaFecha(
+          idCurso,
+          dateString,
+        );
+        setListaAsistenciaDia(detalles);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      setListaAsistenciaDia(null); // No attendance for this day
+    }
+  };
+
+  const tileClassName = ({ date, view }) => {
+    if (view === "month") {
+      const offsetDate = new Date(
+        date.getTime() - date.getTimezoneOffset() * 60000,
+      );
+      const dateString = offsetDate.toISOString().split("T")[0];
+      if (fechasAsistencia.includes(dateString)) {
+        return "highlight-attendance"; // Need to add CSS for this class
+      }
+    }
+    
   };
 
   const hanldleSubmit = async () => {
@@ -103,6 +169,20 @@ export default function MisCursos() {
 
   return (
     <div className="misCursos">
+      {/* Inject Styles for Calendar Highlight */}
+      <style>{`
+            .highlight-attendance {
+                background: #28a745 !important;
+                color: white !important;
+                border-radius: 50%;
+            }
+            .react-calendar {
+                width: 100%;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                border-radius: 8px;
+            }
+        `}</style>
       <h2>Cursos asignados</h2>
       <div className="containerCursosDocente">
         {misCursos.map((curso) => (
@@ -110,13 +190,17 @@ export default function MisCursos() {
             <h2>{curso.nombre}</h2>
             <p>{curso.descripcion}</p>
             <div className="botonesCurso">
-              <button onClick={() => setIsOpenDetalles(true)}>
-                Ver detalles
+              <button onClick={() => handleVerDetalles(curso.id)}>
+                Ver Historial Asistencia
               </button>
               <button onClick={() => handleAgregarAlumno(curso.id)}>
                 Agregar alumnos
               </button>
-              <button onClick={() => handleAsistencia(curso.nombre, curso.id)}>
+              <button
+                onClick={() =>
+                  handleAsistencia(curso.nombre, curso.id)
+                }
+              >
                 Asistencia
               </button>
             </div>
@@ -194,7 +278,7 @@ export default function MisCursos() {
           <button
             type="button"
             className="botonAgregar"
-            onClick={()=>hanldleSubmit()}
+            onClick={() => hanldleSubmit()}
           >
             Agregar
           </button>
@@ -202,7 +286,7 @@ export default function MisCursos() {
       </Modal>
 
       {/* modal asistencia */}
-       <ModalAsistencia
+      <ModalAsistencia
         isOpen={isOpenAsistencia}
         onClose={() => setIsOpenAsistencia(false)}
         nombreCurso={nombreCurso}
@@ -210,23 +294,72 @@ export default function MisCursos() {
         idCurso={idCurso}
       />
 
-      {/* modal detalles del curso */}
+      {/* modal detalles del curso (Calendario) */}
       <Modal
         isOpen={isOpenDetalles}
         onClose={() => {
           setIsOpenDetalles(false);
+          setListaAsistenciaDia(null);
         }}
-        title="Ver detalles"
+        title="Historial de Asistencia"
       >
-        <div className="containerDetallesCurso">
-          <p>Detalles del curso</p>
-          <div className="informacion">
-            <p>nombre del curso</p>
-            <p>descripcion del curso</p>
-            <p>docente del curso</p>
-            <p>grado del curso</p>
-            <p>cantidad de alumnos</p>
-            <p>promedio de notas</p>
+        <div
+          className="containerDetallesCurso"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Calendar
+              onChange={onDateChange}
+              value={fechaSeleccionada}
+              tileClassName={tileClassName}
+            />
+          </div>
+          <div>
+            <h3 className="detalle-fecha">
+              Detalle Asistencia:{" "}
+              {fechaSeleccionada.toLocaleDateString()}
+            </h3>
+            {listaAsistenciaDia ? (
+              <table
+                style={{ width: "100%", borderCollapse: "collapse" }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: "left" }}>Alumno</th>
+                    <th>Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listaAsistenciaDia.map((a, i) => (
+                    <tr
+                      key={i}
+                      style={{ borderBottom: "1px solid #eee" }}
+                    >
+                      <td style={{ padding: "8px" }}>
+                        {a.nombre} {a.apellido}
+                      </td>
+                      <td
+                        style={{
+                          padding: "8px",
+                          color: a.presente ? "green" : "red",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {a.presente ? "Presente" : "Ausente"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>
+                Selecciona un día marcado en verde para ver la lista.
+              </p>
+            )}
           </div>
         </div>
       </Modal>

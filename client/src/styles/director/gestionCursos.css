@@ -1,3 +1,21 @@
+:root {
+  /* Primario */
+  --guinda: #800020;
+  --guinda-hover: #660019;
+
+  /* Neutros */
+  --blanco-calido: #FAFAFA;
+  --gris-claro: #E0E0E0;
+  --gris-medio: #BDBDBD;
+  --gris-oscuro: #333333;
+
+  /* Estados */
+  --fondo-app: #F5F5F5;
+  --card-bg: #FFFFFF;
+  --borde-suave: #DDDDDD;
+}
+
+
 .addCurso {
   display: flex;
   justify-content: start;
@@ -74,3 +92,15 @@
   color: black;
 }
 
+.buttonGestion,
+.formulario-reporte button,
+.buttonLogin {
+  background-color: var(--guinda);
+  color: white;
+}
+
+.buttonGestion:hover,
+.formulario-reporte button:hover,
+.buttonLogin:hover {
+  background-color: var(--guinda-hover);
+}

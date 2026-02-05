@@ -1,0 +1,21 @@
+:root {
+  /* Primario */
+  --guinda: #800020;
+  --guinda-hover: #660019;
+  --cards: #f1d8d8;
+  --verde-bg: #c8e6c9;
+  --verde: #1b5e20;
+  --rojo-bg: #f8d7da;
+  --rojo: #721c24;
+
+  /* Neutros */
+  --blanco-calido: #FAFAFA;
+  --gris-claro: #E0E0E0;
+  --gris-medio: #BDBDBD;
+  --gris-oscuro: #333333;
+
+  /* Estados */
+  --fondo-app: #F5F5F5;
+  --card-bg: #FFFFFF;
+  --borde-suave: #DDDDDD;
+}

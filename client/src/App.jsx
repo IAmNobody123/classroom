@@ -19,6 +19,9 @@ import Juegos from "./pages/docent/juegos";
 import GestionCursos from "./pages/director/GestionCursos";
 import FormularPreguntas from "./pages/docent/FormularPreguntas";
 import SubirMaterial from "./pages/docent/SubirMaterial";
+import CalificarAlumnos from "./pages/docent/CalificarAlumnos";
+import DashboardStudent from "./pages/student/DashboardStudent";
+import MaterialesAlumno from "./pages/student/MaterialesAlumno";
 
 function App() {
   return (
@@ -57,8 +60,21 @@ function App() {
             <Route path="/formular-preguntas" element={<FormularPreguntas />} />
             <Route path="/plan-trabajo" element={<PlanTrabajo />} />
             <Route path="/juegos" element={<Juegos />} />
+            <Route path="/calificar-alumnos" element={<CalificarAlumnos />} />
 
 
+
+          </Route>
+
+          <Route
+            element={
+              <PrivateRoute allowedRoles={['alumno']}>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route path="/dashboardStudent" element={<DashboardStudent />} />
+            <Route path="/alumno/curso/:cursoId" element={<MaterialesAlumno />} />
           </Route>
 
           <Route
