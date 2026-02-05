@@ -27,6 +27,19 @@ const {
   materialCurso,
   listadoMaterialCurso,
   materialPorCurso,
+  getFormularioByDocumento,
+  insertNota,
+  listCursosAlumno,
+  submitExamen,
+  createFormulario,
+  getMaterialesPendientes,
+  getAlumnosSinNota,
+  uploadPlanTrabajo,
+  listPlanesTrabajo,
+  getFechasAsistencia,
+  getAsistenciaFecha,
+  getDashboardStats,
+  getMaterialById
 } = require("../controllers/docente.controller");
 
 // imagenes de docentes
@@ -57,7 +70,7 @@ const upload2 = multer({ storage: storage2 });
 // middleware para subir material de trabajo
 
 const storageMaterial = multer.diskStorage({
-  destination: (req, file, cb) =>{
+  destination: (req, file, cb) => {
     // const {idDocente,gradoCurso} = req.body;
     // console.log(idDocente,gradoCurso);
     // const dir = path.join("uploads", "docs", `${idDocente}`, `${gradoCurso}`);
@@ -67,7 +80,7 @@ const storageMaterial = multer.diskStorage({
 
     // cb(null, dir);
     cb(null, "uploads/docs/temp");
-    if(!fs.existsSync("uploads/docs/temp")){
+    if (!fs.existsSync("uploads/docs/temp")) {
       fs.mkdirSync("uploads/docs/temp", { recursive: true });
     }
   },
@@ -107,5 +120,21 @@ router.post("/marcarAsistencia", marcarAsistencia);
 router.post("/materialCurso", uploadMaterial.single("material"), materialCurso);
 router.get("/listadoMaterialCurso", listadoMaterialCurso);
 router.get("/materialPorCurso/:id", materialPorCurso);
+router.post("/createFormulario", createFormulario);
+router.get("/getFormularioByDocumento/:id", getFormularioByDocumento);
+router.post("/insertNota", insertNota);
+router.get("/listCursosAlumno/:id", listCursosAlumno);
+router.post("/submitExamen", submitExamen);
+router.get("/getMaterialesPendientes/:id", getMaterialesPendientes);
+router.post("/getAlumnosSinNota", getAlumnosSinNota);
+
+// Planes de Trabajo
+router.post("/uploadPlanTrabajo", uploadMaterial.single("archivo"), uploadPlanTrabajo);
+router.get("/listPlanesTrabajo/:id", listPlanesTrabajo);
+router.get("/getFechasAsistencia/:id", getFechasAsistencia);
+router.post("/getAsistenciaFecha", getAsistenciaFecha);
+router.get("/dashboardStats/:id", getDashboardStats);
+router.get("/getMaterialById/:id", getMaterialById);
+
 
 module.exports = router;
