@@ -98,7 +98,7 @@ export default function CardCursos({
           <p>{grado}</p>
         </div>
         <div className="botonCurso">
-          <button onClick={() => setIsOpenAgregar(true)}>
+          <button className="boton-add-material" onClick={() => setIsOpenAgregar(true)}>
             {button}
           </button>
         </div>
@@ -130,7 +130,7 @@ export default function CardCursos({
               onChange={(e) => setMaterial(e.target.files[0])}
             />
           </div>
-          <button onClick={() => handleSubmit()}>Agregar</button>
+          <button className="boton-add-material" onClick={() => handleSubmit()}>Agregar</button>
         </div>
       </Modal>
     </div>

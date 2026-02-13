@@ -68,13 +68,13 @@
 
 .dashboard-chart {
   background-color: white;
-  width: 40%;
   padding: 20px 30px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .graficos{
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     flex-direction: row;
     gap: 1rem;
 }
@@ -102,4 +102,24 @@
 .dashboard-chart {
   background-color: var(--card-bg);
   border: 1px solid var(--borde-suave);
+}
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  background: white;
+}
+
+.card-icon {
+  font-size: 2rem;
+  color: var(--guinda-hover);
+  margin-bottom: -.3rem;
+}
+.card h3 {
+  font-size: 1.3rem;
+  color: var(--guinda-hover);
+  margin-bottom: 0;
 }

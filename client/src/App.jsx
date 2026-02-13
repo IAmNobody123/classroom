@@ -22,6 +22,7 @@ import SubirMaterial from "./pages/docent/SubirMaterial";
 import CalificarAlumnos from "./pages/docent/CalificarAlumnos";
 import DashboardStudent from "./pages/student/DashboardStudent";
 import MaterialesAlumno from "./pages/student/MaterialesAlumno";
+import PlanTrabajoVer from "./pages/director/PlanTrabajo";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
               element={<GestionUsuarios />}
             />
             <Route path="/reportes" element={<Reportes />} />
+            <Route path="/planTrabajoVer" element={<PlanTrabajoVer />} />
             <Route path="/cursos" element={<GestionCursos />} />
           </Route>
 

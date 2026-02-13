@@ -58,7 +58,7 @@ const Reportes = () => {
           <option value="participacion">Participación</option>
         </select>
 
-        <button onClick={generarReporte}>Generar</button>
+        <button className="botonReporte" onClick={generarReporte}>Generar</button>
       </div>
 
       {reporte.length > 0 && (

@@ -6,7 +6,6 @@ const LoginRedirect = () => {
   const { isAuthenticated, user } = useAuth();
 
   if (isAuthenticated) {
-    console.log("usuario2",user);
     // Redirigir según el rol
     switch (user.rol_id) {
       case 'director':

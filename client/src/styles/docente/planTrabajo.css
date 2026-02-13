@@ -93,3 +93,133 @@
 .btn-ver-material:hover {
   background: #0bb3a1;
 }
+.btn-ver-material{
+    background: #3091ff;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .btn-ver-material:hover {
+    background: #2f00ff;
+}
+
+/* Formulario */
+.formPlanTrabajo {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Agrupación de cada campo */
+.formPlanTrabajo div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Labels */
+.formPlanTrabajo label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Inputs, select y textarea */
+.formPlanTrabajo input,
+.formPlanTrabajo select,
+.formPlanTrabajo textarea {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  color: black;
+  background-color: #ccc;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* Focus elegante */
+.formPlanTrabajo input:focus,
+.formPlanTrabajo select:focus,
+.formPlanTrabajo textarea:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(128, 0, 32, 0.15); /* guinda suave */
+}
+
+/* Textarea resize */
+.formPlanTrabajo textarea {
+  resize: none;
+}
+
+/* Input file más limpio */
+.formPlanTrabajo input[type="file"] {
+  padding: 8px;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+/* Botón */
+.formPlanTrabajo button {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--guinda-hover);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover botón */
+.formPlanTrabajo button:hover {
+  background: #5a0018;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .formPlanTrabajo {
+    margin: 20px;
+    padding: 20px;
+  }
+}
+/* filtros */
+.filtros {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin: 20px 0;
+}
+
+.filtros input,
+.filtros select {
+  border-radius: 8px;
+  border: 1px solid var(--guinda-hover);
+  color: black;
+  background-color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.filtros input:focus,
+.filtros select:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(38, 128, 0, 0.15);
+}
+
+.filtros input {
+  flex: 0.5;
+
+}

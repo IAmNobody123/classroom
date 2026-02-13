@@ -76,14 +76,13 @@ export default function MisCursos() {
     setIsOpenAsistencia(true);
   };
 
-  // New History Handler
   const handleVerDetalles = async (cursoId) => {
     setIdCurso(cursoId);
-    setFechasAsistencia([]); // Clear previous
+    setFechasAsistencia([]);
     setListaAsistenciaDia(null);
     try {
       const fechas = await getFechasAsistencia(cursoId);
-      // fechas array of "YYYY-MM-DD"
+
       setFechasAsistencia(fechas || []);
       setIsOpenDetalles(true);
     } catch (error) {
@@ -94,8 +93,7 @@ export default function MisCursos() {
 
   const onDateChange = async (date) => {
     setFechaSeleccionada(date);
-    // Check if this date has attendance
-    // date is Date object. Convert to YYYY-MM-DD local
+
     const offsetDate = new Date(
       date.getTime() - date.getTimezoneOffset() * 60000,
     );
@@ -103,7 +101,6 @@ export default function MisCursos() {
 
     if (fechasAsistencia.includes(dateString)) {
       try {
-        // Fetch details
         const detalles = await getAsistenciaFecha(
           idCurso,
           dateString,
@@ -113,7 +110,7 @@ export default function MisCursos() {
         console.error(e);
       }
     } else {
-      setListaAsistenciaDia(null); // No attendance for this day
+      setListaAsistenciaDia(null); 
     }
   };
 
@@ -124,7 +121,7 @@ export default function MisCursos() {
       );
       const dateString = offsetDate.toISOString().split("T")[0];
       if (fechasAsistencia.includes(dateString)) {
-        return "highlight-attendance"; // Need to add CSS for this class
+        return "highlight-attendance"; 
       }
     }
     
@@ -169,7 +166,6 @@ export default function MisCursos() {
 
   return (
     <div className="misCursos">
-      {/* Inject Styles for Calendar Highlight */}
       <style>{`
             .highlight-attendance {
                 background: #28a745 !important;

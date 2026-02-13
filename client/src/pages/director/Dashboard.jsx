@@ -1,5 +1,5 @@
 import "../../styles/director.css";
-import React from "react";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,19 +11,52 @@ import {
 } from "chart.js";
 import "../../styles/director/dashboard.css";
 
+import {
+  FaUserGraduate,
+  FaChalkboardTeacher,
+  FaSchool,
+} from "react-icons/fa";
+import { getDataDashboard } from "../../front-back/apiDirector";
+
 ChartJS.register(
   BarElement,
   CategoryScale,
   LinearScale,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const Dashboard = () => {
-  const stats = {
-    alumnos: 150,
-    docentes: 12,
-    cursos: 8,
+  const { id } = JSON.parse(localStorage.getItem("user"));
+  const [data, setData] = useState([]);
+  console.log("ID", id);
+
+  // const stats = {
+  //   alumnos: 150,
+  //   docentes: 12,
+  //   cursos: 8,
+  // };
+  const cards = [
+    {
+      titulo: "Alumnos",
+      cantidad: data.alumnos,
+      icon: <FaUserGraduate />,
+    },
+    {
+      titulo: "Docentes",
+      cantidad: data.docentes,
+      icon: <FaChalkboardTeacher />,
+    },
+    {
+      titulo: "Clases",
+      cantidad: data.cursos,
+      icon: <FaSchool />,
+    },
+  ];
+
+  const loadData = async () => {
+    const response = await getDataDashboard();
+    setData(response);
   };
 
   const chartData = {
@@ -38,29 +71,34 @@ const Dashboard = () => {
     ],
   };
 
+  useEffect(() => {
+    loadData();
+  }, [id]);
   return (
     <div className="dashboard">
       <h1 className="dashboard-title">Panel del Director</h1>
-      <p className="dashboard-subtitle">
-        Sistema de gestion escolar
-      </p>
+      <p className="dashboard-subtitle">Sistema de gestion escolar</p>
 
       <div className="dashboard-cards">
-        <div className="card">
-          <h3>Alumnos</h3>
-          <p>{stats.alumnos}</p>
-        </div>
-        <div className="card">
-          <h3>Docentes</h3>
-          <p>{stats.docentes}</p>
-        </div>
-        <div className="card">
-          <h3>Cursos</h3>
-          <p>{stats.cursos}</p>
-        </div>
+        {cards.map((item, index) => (
+          <div className="card" key={index}>
+            <div className="card-icon">{item.icon}</div>
+            <h3>{item.titulo}</h3>
+            <p>{item.cantidad}</p>
+          </div>
+        ))}
+
       </div>
 
       <div className="graficos">
+        <div className="dashboard-chart">
+          <h2>Resumen de Asistencias</h2>
+          <Bar data={chartData} />
+        </div>
+        <div className="dashboard-chart">
+          <h2>Resumen de Asistencias</h2>
+          <Bar data={chartData} />
+        </div>
         <div className="dashboard-chart">
           <h2>Resumen de Asistencias</h2>
           <Bar data={chartData} />

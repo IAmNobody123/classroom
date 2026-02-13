@@ -5,12 +5,12 @@ import { useState } from "react";
 import "../../styles/docente/formularPreguntas.css";
 
 export default function FormularPreguntas() {
-  const [preguntas, setPreguntas] = useState([{ id: 1 }]);
+  // const [preguntas, setPreguntas] = useState([{ id: 1 }]);
   const [idCurso, setIdCurso] = useState("");
 
-  const agregarPregunta = () => {
-    setPreguntas([...preguntas, { id: preguntas.length + 1 }]);
-  };
+  // const agregarPregunta = () => {
+  //   setPreguntas([...preguntas, { id: preguntas.length + 1 }]);
+  // };
 
   return (
     <div className="formular-preguntas-page">

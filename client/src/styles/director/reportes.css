@@ -103,3 +103,10 @@ table td {
   border-radius: 10px;
   cursor: pointer;
 }
+.botonReporte{
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 1.1rem;
+}

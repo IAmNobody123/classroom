@@ -121,3 +121,114 @@
   align-items: center;
   justify-content: center;
 }
+
+.formulario-pregunta-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.formulario-left h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.formulario-left input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.alternativas-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+.alternativas-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.alternativas-list input[type="radio"] {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.alternativas-list input[type="text"] {
+  flex: 1;
+}
+
+.alternativas-list button {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.alternativas-list button:hover {
+  background-color: #d9363e;
+}
+
+.formulario-left > button {
+  margin-top: 8px;
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.formulario-left > button:hover {
+  background-color: #1677cc;
+}
+
+/* Columna derecha (imagen) */
+.formulario-right {
+  display: flex;
+  align-items: flex-start;
+}
+
+.imagen-box {
+  width: 100%;
+  padding: 16px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.imagen-box input {
+  margin-top: 12px;
+}
+
+/* Botón eliminar pregunta */
+.formulario-pregunta-container > button {
+  grid-column: 1 / -1;
+  justify-self: flex-end;
+  margin-top: 16px;
+  background-color: #ff7875;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.formulario-pregunta-container > button:hover {
+  background-color: #d94a45;
+}

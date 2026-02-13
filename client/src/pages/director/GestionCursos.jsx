@@ -64,6 +64,7 @@ export default function GestionCursos() {
   return (
     <div>
       <div className="addCurso">
+        <p>Presiona el boton para agregar un nuevo curso</p>
         <button
           className="buttonAddCurso"
           onClick={() => setOpenModal(true)}

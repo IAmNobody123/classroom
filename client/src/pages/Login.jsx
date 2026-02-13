@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Toast from "../components/Toast";
 
 const images = ["/img3.webp", "/img2.webp", "/fondoLogin.jpg"];
 
@@ -16,24 +17,29 @@ export default function Login() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      switch (user.rol) {
-        case "director":
-          navigate("/dashboard", { replace: true });
-          break;
-        case "docente":
-          navigate("/dashboardDocente", { replace: true });
-          break;
-        default:
-          break;
-      }
+useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  if (storedUser) {
+    const user = JSON.parse(storedUser);
+    switch (user.rol) {
+      case "director":
+        navigate("/dashboard", { replace: true });
+        break;
+      case "docente":
+        navigate("/dashboardDocente", { replace: true });
+        break;
+      default:
+        break;
     }
-  }, [navigate]);
+  }
+}, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      Toast("Error", "Por favor, complete todos los campos", "error");
+      return;
+    }
 
     const res = await login(username, password);
 

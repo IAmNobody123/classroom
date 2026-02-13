@@ -20,10 +20,9 @@ export default function ListaMateriales({ idCurso }) {
   ]);
 
   useEffect(() => {
-    const response = materialPorCurso(idCurso);
-    response.then((data) => {
-      setMateriales(data);
-    });
+    if(idCurso) {
+      materialPorCurso(idCurso).then((data) => setMateriales(data || []));
+    }
   }, [idCurso]);
 
   const handleOpenModal = (materialId, tituloMaterial) => {
@@ -120,9 +119,8 @@ export default function ListaMateriales({ idCurso }) {
           <div className="material-item" key={i}>
             <div>
               <p className="material-title">{m.titulo}</p>
-              <p className="material-curso">Curso: {m.curso}</p>
+              <p className="material-curso">Curso: {m.nombre}</p>
             </div>
-            {console.log("objeto ", m)}
             <button className="btn-agregar" onClick={() => handleOpenModal(m.id, m.titulo)}>
               Crear formulario
             </button>
@@ -133,7 +131,7 @@ export default function ListaMateriales({ idCurso }) {
       )}
 
       <Modal isOpen={showModal} onClose={handleCloseModal} title={formTitle || "Crear Formulario"}>
-        <div style={{ maxHeight: "70vh", overflowY: "auto", padding: "10px" }}>
+        <div>
           {preguntas.map((p, i) => (
             <FormularioPreguntas
               key={i}
@@ -148,14 +146,12 @@ export default function ListaMateriales({ idCurso }) {
           <button
             className="btn-nueva-pregunta"
             onClick={agregarPregunta}
-            style={{ marginTop: "20px", width: "100%" }}
           >
             Nueva pregunta
           </button>
           <button
             className="btn-guardar"
             onClick={handleSaveForm}
-            style={{ marginTop: "10px", width: "100%", background: "green", color: "white", padding: "10px", border: "none" }}
           >
             Guardar Formulario
           </button>

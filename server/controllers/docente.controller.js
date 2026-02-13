@@ -27,7 +27,6 @@ const insertAlumnoCurso = async (req, res) => {
     const { discapacidad, nombre, apellido, curso } = req.body;
     let imagen = null;
 
-    // Asegurar que la carpeta exista
     const dir = "uploads/img/alumnosCursos";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -40,12 +39,9 @@ const insertAlumnoCurso = async (req, res) => {
       const newFileName = `${sanitizedNombre}_${sanitizedApellido}_${curso}${ext}`;
       const newPath = path.join(dir, newFileName);
 
-      // Renombrar archivo
       fs.renameSync(req.file.path, newPath);
-
       imagen = newFileName;
     }
-
     const result = await pool.query(
       `INSERT INTO alumnos (nombre, apellido, discapacidad, imagenalumno, clase_id)
        VALUES ($1, $2, $3, $4, $5)
@@ -168,7 +164,6 @@ const materialCurso = async (req, res) => {
     );
     const idDocenteReal = idDocenteLimpio.rows[0].id;
 
-    // Crear carpeta destino final
     const dir = path.join(
       "uploads",
       "docs",
@@ -179,7 +174,6 @@ const materialCurso = async (req, res) => {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    // Mover archivo desde temp
     const tempPath = req.file.path;
     const newPath = path.join(dir, req.file.filename);
     fs.renameSync(tempPath, newPath);
@@ -610,13 +604,11 @@ const listPlanesTrabajo = async (req, res) => {
       process.env.BACKEND_URL || "http://localhost:5000";
 
     const planesWithUrl = result.rows.map((plan) => {
-      // Ensure standard web slashes
+
       const normalizedPath = plan.ruta_archivo.replace(/\\/g, "/");
+      
       return {
         ...plan,
-        // Assuming DB path starts with 'uploads/'.
-        // If static serve is '/uploads/docs' mapped to 'uploads/docs',
-        // and path is 'uploads/docs/planes/...', then URL path is same.
         ruta_archivo: `${BACKEND_URL}/${normalizedPath}`,
       };
     });
@@ -767,6 +759,9 @@ const getDashboardStats = async (req, res) => {
   }
 };
 
+
+
+
 module.exports = {
   listCursosDocente,
   insertAlumnoCurso,
@@ -787,5 +782,5 @@ module.exports = {
   getFechasAsistencia,
   getAsistenciaFecha,
   getDashboardStats,
-  getMaterialById,
+  getMaterialById
 };

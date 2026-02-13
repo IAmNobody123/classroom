@@ -17,6 +17,7 @@ const menuItems = {
     { path: "/dashboard", label: "Dashboard" },
     { path: "/gestionUsuarios", label: "Gestión de Usuarios" },
     { path: "/cursos", label: "Cursos" },
+    { path: "/planTrabajoVer", label: "Plan de trabajo" },
     { path: "/reportes", label: "Reportes" },
   ],
 };
@@ -27,7 +28,9 @@ export default function Sidebar({ role }) {
   const { logout } = useAuth();
   return (
     <div className="sidebarBox">
-      <h2 className="sidebarTitle">Menú</h2>
+      <div className="sidebarTitle">
+          <img src="/logo.png" alt="" />
+      </div>
       <ul className="sidebarList">
         {items.map((item, idx) => (
           <li key={idx}>

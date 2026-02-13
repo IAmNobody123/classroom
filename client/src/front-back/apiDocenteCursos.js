@@ -146,3 +146,8 @@ export const getMaterialById = async (id) => {
   const response = await fetch(`${API_URL}/getMaterialById/${id}`);
   return response.json();
 };
+
+export const getDataDashboardDocente = async (id) => {
+  const response = await fetch(`${API_URL}/getDataDashboardDocente/${id}`);
+  return response.json();
+};

@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from "react";
 import useAuth from "../../context/useAuth";
 import {
   getListCursosDocente,
   uploadPlanTrabajo,
-  listPlanesTrabajo
+  listPlanesTrabajo,
 } from "../../front-back/apiDocenteCursos";
 import Modal from "../../components/Modal";
-import '../../styles/docente/PlanTrabajo.css';
+import "../../styles/docente/PlanTrabajo.css";
 import mammoth from "mammoth";
 
 export default function PlanTrabajo() {
@@ -19,30 +19,28 @@ export default function PlanTrabajo() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewHtml, setPreviewHtml] = useState("");
-  const [previewType, setPreviewType] = useState(""); // 'pdf' or 'html'
+  const [previewType, setPreviewType] = useState(""); 
   const [previewTitle, setPreviewTitle] = useState("");
 
   // Form State
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const hoy = new Date().toISOString().split('T')[0];
+  const hoy = new Date().toISOString().split("T")[0];
   const [fecha, setFecha] = useState(hoy);
   const [cursoId, setCursoId] = useState("");
   const [archivo, setArchivo] = useState(null);
 
-  useEffect(() => {
-    if (user && user.id) {
-      getListCursosDocente(user.id).then(data => setCursos(data));
-      listaPlanes(user.id);
-    }
-  }, [user]);
+  //filtros
+  const [search, setSearch] = useState("");
+  const [cursoFiltro, setCursoFiltro] = useState("");
 
   // Refresh plans
-  const listaPlanes = (userId) => {
-    const uid = userId || user?.id;
-    if (uid)
-      listPlanesTrabajo(uid).then(data => setPlanes(data));
-  };
+  const listaPlanes = useCallback((userId) => {
+    if (userId) {
+      listPlanesTrabajo(userId).then((data) => setPlanes(data));
+    }
+  }, []);
+
   const closePreviewModal = () => {
     setShowModal(false);
     setTitulo("");
@@ -89,13 +87,13 @@ export default function PlanTrabajo() {
     if (!url) return;
 
     const lowerUrl = url.toLowerCase();
-    const isPdf = lowerUrl.endsWith('.pdf');
-    const isDocx = lowerUrl.endsWith('.docx');
+    const isPdf = lowerUrl.endsWith(".pdf");
+    const isDocx = lowerUrl.endsWith(".docx");
 
     setPreviewTitle(plan.titulo);
 
     if (isPdf) {
-      setPreviewType('pdf');
+      setPreviewType("pdf");
       setPreviewUrl(url);
       setShowPreviewModal(true);
     } else if (isDocx) {
@@ -103,83 +101,176 @@ export default function PlanTrabajo() {
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
         const result = await mammoth.convertToHtml({ arrayBuffer });
-        setPreviewType('html');
+        setPreviewType("html");
         setPreviewHtml(result.value);
         setShowPreviewModal(true);
       } catch (error) {
         console.error("Error converting docx:", error);
-        if (confirm("No se pudo previsualizar el documento Word. ¿Desea descargarlo?")) {
-          window.open(url, '_blank');
+        if (
+          confirm(
+            "No se pudo previsualizar el documento Word. ¿Desea descargarlo?",
+          )
+        ) {
+          window.open(url, "_blank");
         }
       }
     } else {
       // Fallback
-      if (confirm("Este archivo no se puede previsualizar. ¿Desea descargarlo?")) {
-        window.open(url, '_blank');
+      if (
+        confirm(
+          "Este archivo no se puede previsualizar. ¿Desea descargarlo?",
+        )
+      ) {
+        window.open(url, "_blank");
       }
     }
   };
+  useEffect(() => {
+    if (user && user.id) {
+      getListCursosDocente(user.id).then((data) => setCursos(data));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user?.id) {
+      listaPlanes(user.id);
+    }
+  }, [user?.id, listaPlanes]);
+
+  const planesFiltrados = planes.filter((p) => {
+    const coincideNombre = p.titulo
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const coincideCurso = cursoFiltro
+      ? p.curso === cursoFiltro
+      : true;
+
+    return coincideNombre && coincideCurso;
+  });
 
   return (
     <div className="planes-page">
       <div className="top-buttons">
-        <button className="menu-btn" onClick={() => setShowModal(false)}>Listado de planes de trabajo</button>
-        <button className="menu-btn" onClick={() => setShowModal(true)}>Agregar plan de trabajo</button>
+        <button
+          className="menu-btn"
+          onClick={() => setShowModal(false)}
+        >
+          Listado de planes de trabajo
+        </button>
+        <button
+          className="menu-btn"
+          onClick={() => setShowModal(true)}
+        >
+          Agregar plan de trabajo
+        </button>
       </div>
 
       <div className="content-box">
         <h2 className="title">Listado de planes de trabajo</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+        <div className="filtros">
+          <input
+            type="text"
+            placeholder="Buscar por nombre..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
-          {planes.length === 0 ? (
-            <p>No hay planes cargados.</p>
-          ) : (
-            planes.map((p) => (
-              <div className="plan-card" key={p.id}>
-                <div className="plan-info">
-                  <div className="plan-header">
-                    <p className="plan-title">{p.titulo}</p>
-                    <p className="plan-fecha">Fecha: {p.fecha ? new Date(p.fecha).toLocaleDateString() : 'Sin fecha'}</p>
-                  </div>
-                  <p className="plan-desc">{p.descripcion}</p>
-                  <p className="plan-curso">Curso: {p.curso}</p>
-                </div>
-                <button
-                  onClick={() => handleViewPlan(p)}
-                  className="btn-ver-material"
-                  style={{ textDecoration: 'none', textAlign: 'center', display: 'block', marginTop: '10px', width: '100%', background: '#007BFF', color: 'white', border: 'none', padding: '10px', cursor: 'pointer', borderRadius: '5px' }}
-                >
-                  Ver Plan
-                </button>
-              </div>
-            ))
-          )}
+          <select
+            value={cursoFiltro}
+            onChange={(e) => setCursoFiltro(e.target.value)}
+          >
+            <option value="">Todos los cursos</option>
+            {[...new Set(planes.map((p) => p.curso))].map(
+              (curso, index) => (
+                <option key={index} value={curso}>
+                  {curso}
+                </option>
+              ),
+            )}
+          </select>
         </div>
+        <table className="plan-table">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Fecha</th>
+              <th>Descripción</th>
+              <th>Curso</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {planesFiltrados.map((p) => (
+              <tr key={p.id}>
+                <td>{p.titulo}</td>
+                <td>
+                  {p.fecha
+                    ? new Date(p.fecha).toLocaleDateString()
+                    : "Sin fecha"}
+                </td>
+                <td>{p.descripcion}</td>
+                <td>{p.curso}</td>
+                <td>
+                  <button
+                    onClick={() => handleViewPlan(p)}
+                    className="btn-ver-material"
+                  >
+                    Ver Plan
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {showModal && (
-        <Modal isOpen={showModal} onClose={closePreviewModal} title="Agregar Plan de Trabajo">
-          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+        <Modal
+          isOpen={showModal}
+          onClose={closePreviewModal}
+          title="Agregar Plan de Trabajo"
+        >
+          <form className="formPlanTrabajo" onSubmit={handleSubmit}>
             <div>
               <label>Curso:</label>
-              <select value={cursoId} onChange={(e) => setCursoId(e.target.value)} required style={{ width: '100%', padding: '8px' }}>
+              <select
+                value={cursoId}
+                onChange={(e) => setCursoId(e.target.value)}
+                required
+              >
                 <option value="">Seleccione Curso</option>
-                {cursos.map(c => (
-                  <option key={c.id} value={c.id}>{c.nombre}</option>
+                {cursos.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nombre}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
               <label>Nombre del Material:</label>
-              <input type="text" value={titulo} onChange={e => setTitulo(e.target.value)} required style={{ width: '100%', padding: '8px' }} />
+              <input
+                type="text"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                required
+              />
             </div>
             <div>
               <label>Descripción:</label>
-              <textarea value={descripcion} onChange={e => setDescripcion(e.target.value)} style={{ width: '100%', padding: '8px' }} rows="3" />
+              <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                rows="3"
+              />
             </div>
             <div>
               <label>Fecha:</label>
-              <input type="date" value={fecha} onChange={e => setFecha(Date.parse(e.target.value))} style={{ width: '100%', padding: '8px' }} />
+              <input
+                type="date"
+                value={fecha}
+                onChange={(e) => setFecha(Date.parse(e.target.value))}
+              />
             </div>
             <div>
               <label>Documento (Word/PDF):</label>
@@ -190,18 +281,40 @@ export default function PlanTrabajo() {
                 required
               />
             </div>
-            <button type="submit" style={{ background: "#28a745", color: "white", padding: "10px", border: "none", cursor: "pointer", borderRadius: "5px" }}>Guardar Plan</button>
+            <button type="submit">Guardar Plan</button>
           </form>
         </Modal>
       )}
 
       {showPreviewModal && (
-        <Modal isOpen={showPreviewModal} onClose={() => setShowPreviewModal(false)} title={previewTitle || "Vista Previa"}>
-          <div style={{ width: '100%', height: '500px', overflowY: 'auto', background: '#fff', padding: '10px', border: '1px solid #ddd' }}>
-            {previewType === 'pdf' ? (
-              <iframe src={previewUrl} style={{ width: '100%', height: '100%', border: 'none' }}></iframe>
-            ) : previewType === 'html' ? (
-              <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
+        <Modal
+          isOpen={showPreviewModal}
+          onClose={() => setShowPreviewModal(false)}
+          title={previewTitle || "Vista Previa"}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "500px",
+              overflowY: "auto",
+              background: "#fff",
+              padding: "10px",
+              border: "1px solid #ddd",
+            }}
+          >
+            {previewType === "pdf" ? (
+              <iframe
+                src={previewUrl}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                }}
+              ></iframe>
+            ) : previewType === "html" ? (
+              <div
+                dangerouslySetInnerHTML={{ __html: previewHtml }}
+              />
             ) : (
               <p>Formato no compatible para visualización.</p>
             )}
@@ -209,5 +322,5 @@ export default function PlanTrabajo() {
         </Modal>
       )}
     </div>
-  )
+  );
 }

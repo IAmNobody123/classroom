@@ -48,9 +48,9 @@ export default function Juegos() {
 
   return (
     <div className="juegos-container">
-      <h1 className="titulo">Selecciona el juego</h1>
+      <h1 className="titulo">Seccion de Juegos</h1>
 
-      <div className="filtro-container">
+      {/* <div className="filtro-container">
         <button
           className={`filtro-btn ${filtro === "TEA" ? "activo" : ""}`}
           onClick={() => setFiltro("TEA")}
@@ -71,7 +71,7 @@ export default function Juegos() {
         >
           TODOS
         </button>
-      </div>
+      </div> */}
 
       {/* Contenedor de tarjetas */}
       <div className="juegos-grid">

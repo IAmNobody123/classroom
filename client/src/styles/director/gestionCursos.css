@@ -18,15 +18,23 @@
 
 .addCurso {
   display: flex;
-  justify-content: start;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 20px;
+  gap: 1.1rem;
+}
+.addCurso p{
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1rem;
 }
 
 .bodyCursos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap:10px;
-  height: 450px;
+  min-height: 450px;
   justify-content: center;
   align-items: center;
 }
@@ -102,5 +110,32 @@
 .buttonGestion:hover,
 .formulario-reporte button:hover,
 .buttonLogin:hover {
+  background-color: var(--guinda-hover);
+}
+
+.buttonVerDetalles{
+  background-color: var(--guinda);
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.buttonVerDetalles:hover{
+  background-color: var(--guinda-hover);
+}
+.buttonAddCurso{
+  background-color: var(--guinda);
+  color: white;
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.buttonAddCurso:hover{
   background-color: var(--guinda-hover);
 }

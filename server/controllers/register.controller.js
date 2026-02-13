@@ -35,14 +35,29 @@ const registerUsers = async (req, res) => {
 
 const listUsers = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM docentes");
-    
-    res.status(200).json(result.rows);
+    const result = await pool.query(`
+      SELECT d.id, d.nombre, d.correo, d.estado, u.imagen
+      FROM docentes d 
+      INNER JOIN usuarios u ON d.usuario_id = u.id
+    `);
+
+    const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:5000";
+
+    const usersWithImageUrl = result.rows.map((user) => ({
+      ...user,
+      imagen: user.imagen
+        ? `${BACKEND_URL}/uploads/img/perfil/${user.imagen}`
+        : null,
+    }));
+
+    res.status(200).json(usersWithImageUrl);
+
   } catch (error) {
     console.error("Error en la consulta:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
 
 module.exports = {
   registerUsers,

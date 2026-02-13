@@ -79,7 +79,7 @@ function GestionUsuarios() {
     });
   };
 
-  const columns = [ "nombre", "correo", "opciones"];
+  const columns = ["nombre", "correo", "opciones"];
 
   const getDataUsers = async () => {
     const result = await getListUsers();
@@ -100,6 +100,7 @@ function GestionUsuarios() {
         >
           Crear Usuario
         </div>
+
         <Modal
           isOpen={isModalOpen}
           onClose={() => handleCerrarModal()}
@@ -167,24 +168,21 @@ function GestionUsuarios() {
                   />
                 </div>
                 <div className="formGroup boxRol">
-                <label>Rol</label>
-                <select
-                  value={data.rol}
-                  onChange={(e) =>
-                    setData((prev) => ({
-                      ...prev,
-                      rol: e.target.value,
-                    }))
-                  }
-                >
-                  <option value="director">Director</option>
-                  <option value="docente">Docente</option>
-                </select>
-                
+                  <label>Rol</label>
+                  <select
+                    value={data.rol}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        rol: e.target.value,
+                      }))
+                    }
+                  >
+                    <option value="director">Director</option>
+                    <option value="docente">Docente</option>
+                  </select>
+                </div>
               </div>
-              </div>
-
-              
             </div>
 
             <div className="boxImg">
@@ -210,13 +208,10 @@ function GestionUsuarios() {
                   onChange={handleImageChange}
                 />
               </div>
-
-              {/* Mostrar preview si hay imagen */}
               <button className="buttonModal" type="submit">
-                  Crear
-                </button>
+                Crear
+              </button>
             </div>
-            
           </form>
         </Modal>
       </div>

@@ -40,3 +40,12 @@ export const insertCurso = async (data) => {
   const result = await response.json();
   return { success: true, ...result };
 }
+export const getDataDashboard = async () => {
+  const response = await fetch(`${API_URL}/getDataDashboard`);
+  return response.json();
+};
+
+export const listAllPlanesTrabajo = async () => {
+  const response = await fetch(`${API_URL}/listAllPlanesTrabajo`);
+  return response.json();
+};

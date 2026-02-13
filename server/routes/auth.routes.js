@@ -17,6 +17,8 @@ const {
   getListDocentes,
   getListCursos,
   insertCurso,
+  dataDashboard,
+  listAllPlanesTrabajo
 } = require("../controllers/director.controller");
 // docente
 const {
@@ -39,7 +41,7 @@ const {
   getFechasAsistencia,
   getAsistenciaFecha,
   getDashboardStats,
-  getMaterialById
+  getMaterialById,
 } = require("../controllers/docente.controller");
 
 // imagenes de docentes
@@ -130,11 +132,17 @@ router.post("/getAlumnosSinNota", getAlumnosSinNota);
 
 // Planes de Trabajo
 router.post("/uploadPlanTrabajo", uploadMaterial.single("archivo"), uploadPlanTrabajo);
+router.get("/listAllPlanesTrabajo", listAllPlanesTrabajo);
 router.get("/listPlanesTrabajo/:id", listPlanesTrabajo);
 router.get("/getFechasAsistencia/:id", getFechasAsistencia);
 router.post("/getAsistenciaFecha", getAsistenciaFecha);
 router.get("/dashboardStats/:id", getDashboardStats);
 router.get("/getMaterialById/:id", getMaterialById);
+
+// Data Dashboard
+
+router.get("/getDataDashboard", dataDashboard);
+
 
 
 module.exports = router;

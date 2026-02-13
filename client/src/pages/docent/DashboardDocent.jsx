@@ -10,6 +10,11 @@ import {
 } from "chart.js";
 import "../../styles/docente/dashboard.css";
 import { getDashboardStats } from "../../front-back/apiDocenteCursos";
+import {
+  FaUserGraduate,
+  FaCalendarTimes ,
+  FaSchool,
+} from "react-icons/fa";
 
 ChartJS.register(
   CategoryScale,
@@ -49,14 +54,12 @@ const DashboardDocente = () => {
 
       try {
         const stats = await getDashboardStats(user.id);
-
         setDatos({
           cursos: stats.cursos,
           alumnos: stats.alumnos,
           clasesHoy: stats.clasesHoy
         });
 
-        // Setup Attendance Chart
         setAsistenciaData({
           labels: stats.asistencia.map(a => a.nombre),
           datasets: [
@@ -69,7 +72,6 @@ const DashboardDocente = () => {
           ],
         });
 
-        // Setup Grades Chart
         setNotasData({
           labels: stats.notas.map(n => n.nombre),
           datasets: [
@@ -106,14 +108,17 @@ const DashboardDocente = () => {
       <h1>Panel del Docente </h1>
       <div className="docente-cards">
         <div className="docente-card">
+          <div><FaSchool /></div>
           <h3>Cursos asignados</h3>
           <p>{datos.cursos}</p>
         </div>
         <div className="docente-card">
+          <div> <FaUserGraduate /></div>
           <h3>Total de alumnos</h3>
           <p>{datos.alumnos}</p>
         </div>
         <div className="docente-card">
+          <div><FaCalendarTimes /></div>
           <h3>Clases hoy</h3>
           <p>{datos.clasesHoy}</p>
         </div>
@@ -138,6 +143,14 @@ const DashboardDocente = () => {
         </div>
         <div className="docente-chart">
           <h2> Cantidad de alumnos por Curso</h2>
+          {alumnosClase.labels.length > 0 ? (
+            <Bar data={alumnosClase} />
+          ) : (
+            <p>No hay datos de notas aún.</p>
+          )}
+        </div>
+        <div className="docente-chart">
+          <h2> Cantidad de participaciones por Curso</h2>
           {alumnosClase.labels.length > 0 ? (
             <Bar data={alumnosClase} />
           ) : (
