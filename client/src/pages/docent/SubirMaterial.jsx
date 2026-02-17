@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import CardCursos from "../../components/CardCursos";
 import "../../styles/docente/subirMaterial.css";
 import UltimosMateriales from "../../components/director/UltimosMateriales";
-import { getListCursosDocente } from "../../front-back/apiDocenteCursos";
+import {  getListCursosDocente } from "../../front-back/apiDocenteCursos";
 
 export default function SubirMaterial() {
   const user = localStorage.getItem("user");
   const id = JSON.parse(user).id;
   const [misCursos, setMisCursos] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
+
 
   const handleMaterialAdded = () => {
     setRefresh(prev => !prev);
@@ -75,7 +77,7 @@ export default function SubirMaterial() {
         </button>
       </div>
       <div className="containerBodySubirMaterial">
-        <UltimosMateriales refresh={refresh} />
+        <UltimosMateriales refresh={refresh} idDocente={id} />
       </div>
     </div>
   );

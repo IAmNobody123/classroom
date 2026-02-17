@@ -18,7 +18,9 @@ const {
   getListCursos,
   insertCurso,
   dataDashboard,
-  listAllPlanesTrabajo
+  listAllPlanesTrabajo,
+  desactivarUser,
+  getReportes,
 } = require("../controllers/director.controller");
 // docente
 const {
@@ -109,6 +111,9 @@ router.get("/listUsers", listUsers);
 router.get("/listDocentes", getListDocentes);
 router.get("/listCursos", getListCursos);
 router.post("/insertCurso", insertCurso);
+router.put("/desactivarUser/:id", desactivarUser);
+router.post("/getReportes", getReportes);
+
 
 // docentes
 router.get("/listCursosDocente/:id", listCursosDocente);
@@ -120,7 +125,7 @@ router.post(
 router.get("/listAlumnosCursos/:id", listAlumnosCursos);
 router.post("/marcarAsistencia", marcarAsistencia);
 router.post("/materialCurso", uploadMaterial.single("material"), materialCurso);
-router.get("/listadoMaterialCurso", listadoMaterialCurso);
+router.get("/listadoMaterialCurso/:id", listadoMaterialCurso);
 router.get("/materialPorCurso/:id", materialPorCurso);
 router.post("/createFormulario", createFormulario);
 router.get("/getFormularioByDocumento/:id", getFormularioByDocumento);

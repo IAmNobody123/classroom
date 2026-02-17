@@ -12,7 +12,7 @@ const listCursosDocente = async (req, res) => {
     FROM clases c inner join docentes d on c.docente_id = d.id
     inner join usuarios u on d.usuario_id = u.id
     where u.id = $1`,
-      [id]
+      [id],
     );
 
     res.status(200).json(result.rows);
@@ -46,7 +46,7 @@ const insertAlumnoCurso = async (req, res) => {
       `INSERT INTO alumnos (nombre, apellido, discapacidad, imagenalumno, clase_id)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [nombre, apellido, discapacidad, imagen, curso]
+      [nombre, apellido, discapacidad, imagen, curso],
     );
 
     res.status(200).json(result.rows[0]);
@@ -65,7 +65,7 @@ const listAlumnosCursos = async (req, res) => {
       `select a.id,a.nombre as nombre, apellido, discapacidad, imagenalumno
       from alumnos a inner join clases c on a.clase_id = c.id
       where a.clase_id = $1`,
-      [id]
+      [id],
     );
 
     const resultImage = result.rows.map((alumno) => ({
@@ -92,7 +92,7 @@ const marcarAsistencia = async (req, res) => {
         new Date(),
         estadoAsistencia,
         new Date().toISOString(),
-      ]
+      ],
     );
     res.status(200).json(result.rows[0]);
   } catch (error) {
@@ -101,49 +101,6 @@ const marcarAsistencia = async (req, res) => {
   }
 };
 
-// const materialCurso = async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res
-//         .status(400)
-//         .json({ error: "No se envió ningún archivo" });
-//     }
-
-//     const { curso, nombre, idDocente, gradoCurso } =
-//       req.body;
-
-//     const rutaArchivo = path.join(
-//       "uploads",
-//       "docs",
-//       idDocente,
-//       gradoCurso,
-//       req.file.filename
-//     );
-
-//     const idDocenteLimpio = await pool.query(
-//       `select id from docentes where usuario_id = $1`,
-//       [idDocente]
-//     );
-//     idDocente = idDocenteLimpio.rows[0].id;
-
-//     const result = await pool.query(
-//       `INSERT INTO documentos (titulo, ruta_archivo, fecha_subida, docente_id, grado, curso_id)
-//        VALUES ($1, $2, now(),$3, $4, $5)
-//        RETURNING *`,
-//       [nombre,rutaArchivo, idDocente, gradoCurso, curso ]
-//     );
-
-//     res
-//       .status(200)
-//       .json({
-//         message: "Material agregado exitosamente",
-//         data: result.rows[0],
-//       });
-//   } catch (error) {
-//     console.error("Error al subir material:", error);
-//     res.status(500).json({ error: "Error en el servidor" });
-//   }
-// };
 
 const materialCurso = async (req, res) => {
   try {
@@ -160,7 +117,7 @@ const materialCurso = async (req, res) => {
     }
     const idDocenteLimpio = await pool.query(
       `select id from docentes where usuario_id = $1`,
-      [idDocente]
+      [idDocente],
     );
     const idDocenteReal = idDocenteLimpio.rows[0].id;
 
@@ -168,7 +125,7 @@ const materialCurso = async (req, res) => {
       "uploads",
       "docs",
       idDocenteReal.toString(),
-      gradoCurso.toString()
+      gradoCurso.toString(),
     );
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -183,7 +140,7 @@ const materialCurso = async (req, res) => {
       `INSERT INTO documentos (titulo, ruta_archivo, fecha_subida, docente_id, grado, curso_id)
        VALUES ($1, $2, NOW(), $3, $4, $5)
        RETURNING *`,
-      [nombre, newPath, idDocenteReal, gradoCurso, curso]
+      [nombre, newPath, idDocenteReal, gradoCurso, curso],
     );
 
     res.status(201).json({
@@ -197,13 +154,23 @@ const materialCurso = async (req, res) => {
 };
 
 const listadoMaterialCurso = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
   const BACKEND_URL =
     process.env.BACKEND_URL || "http://localhost:5000";
   try {
-    const result = await pool.query(`
-    select d.id, d.titulo as titulo, d.fecha_subida as subido,
-    c.nombre, c.grado
-    from documentos d inner join clases c on d.curso_id = c.id`);
+    const result = await pool.query(
+      `
+      select d.id, d.titulo as titulo, d.fecha_subida as subido,
+        c.nombre, c.grado, d.docente_id
+        from documentos d 
+		inner join clases c on d.curso_id = c.id
+		inner join docentes de on de.id = d.docente_id
+		inner join usuarios u on u.id = de.usuario_id
+    where u.id = $1
+      `,
+      [id],
+    );
 
     const data = result.rows.map((m) => ({
       id: m.id,
@@ -229,12 +196,17 @@ const getMaterialById = async (req, res) => {
       `select d.id, d.titulo as titulo, d.ruta_archivo as ruta, d.fecha_subida as subido,
       c.nombre, c.grado
       from documentos d inner join clases c on d.curso_id = c.id where d.id = $1`,
-      [id]
+      [id],
     );
-    const convert = convertirWordAPdf(BACKEND_URL + result.rows[0].ruta);
+    const convert = convertirWordAPdf(
+      BACKEND_URL + result.rows[0].ruta,
+    );
     res.status(200).json(result.rows[0]);
   } catch (error) {
-    console.error("Error al obtener material de curso del docente:", error);
+    console.error(
+      "Error al obtener material de curso del docente:",
+      error,
+    );
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
@@ -247,7 +219,7 @@ const materialPorCurso = async (req, res) => {
     select d.id, d.titulo as titulo, d.ruta_archivo as ruta, d.fecha_subida as subido,
     c.nombre, c.grado
     from documentos d inner join clases c on d.curso_id = c.id where c.id = $1`,
-      [id]
+      [id],
     );
 
     res.status(200).json(result.rows);
@@ -275,7 +247,7 @@ const createFormulario = async (req, res) => {
     // 1. Insertar Formulario
     const formResult = await client.query(
       `INSERT INTO formularios (titulo, documento_id, fecha_creacion) VALUES ($1, $2, $3) RETURNING id`,
-      [titulo, documento_id, new Date()]
+      [titulo, documento_id, new Date()],
     );
     const formularioId = formResult.rows[0].id;
 
@@ -283,14 +255,14 @@ const createFormulario = async (req, res) => {
     for (const p of preguntas) {
       const pregResult = await client.query(
         `INSERT INTO preguntas (formulario_id, enunciado, imagen_url) VALUES ($1, $2, $3) RETURNING id`,
-        [formularioId, p.enunciado, p.imagen_url || null]
+        [formularioId, p.enunciado, p.imagen_url || null],
       );
       const preguntaId = pregResult.rows[0].id;
 
       for (const alt of p.alternativas) {
         await client.query(
           `INSERT INTO alternativas (pregunta_id, texto, es_correcta) VALUES ($1, $2, $3)`,
-          [preguntaId, alt.texto, alt.es_correcta || false]
+          [preguntaId, alt.texto, alt.es_correcta || false],
         );
       }
     }
@@ -319,7 +291,7 @@ const listCursosAlumno = async (req, res) => {
     // Primero obtenemos el alumno asociado al usuario
     const alumnoResult = await pool.query(
       `SELECT id, clase_id FROM alumnos WHERE usuario_id = $1`,
-      [id]
+      [id],
     );
 
     if (alumnoResult.rows.length === 0) {
@@ -340,7 +312,7 @@ const listCursosAlumno = async (req, res) => {
        FROM clases c 
        LEFT JOIN docentes d ON c.docente_id = d.id 
        WHERE c.id = $1`,
-      [alumno.clase_id]
+      [alumno.clase_id],
     );
 
     res.status(200).json(cursosResult.rows);
@@ -362,7 +334,7 @@ const submitExamen = async (req, res) => {
              FROM preguntas p 
              JOIN alternativas a ON a.pregunta_id = p.id 
              WHERE p.formulario_id = $1 AND a.es_correcta = true`,
-      [formulario_id]
+      [formulario_id],
     );
 
     const correctasMap = new Map();
@@ -387,25 +359,25 @@ const submitExamen = async (req, res) => {
     });
 
     const calificacion = Math.round(
-      (correctCount / totalQuestions) * 100
+      (correctCount / totalQuestions) * 100,
     );
 
     // Guardar Nota
     // Verificar si ya existe
     const checkResult = await pool.query(
       `SELECT id FROM notas WHERE alumno_id = $1 AND formulario_id = $2`,
-      [alumno_id, formulario_id]
+      [alumno_id, formulario_id],
     );
 
     if (checkResult.rows.length > 0) {
       await pool.query(
         `UPDATE notas SET calificacion = $1, fecha_registro = NOW() WHERE id = $2`,
-        [calificacion, checkResult.rows[0].id]
+        [calificacion, checkResult.rows[0].id],
       );
     } else {
       await pool.query(
         `INSERT INTO notas (alumno_id, formulario_id, calificacion, fecha_registro) VALUES ($1, $2, $3, NOW())`,
-        [alumno_id, formulario_id, calificacion]
+        [alumno_id, formulario_id, calificacion],
       );
     }
 
@@ -422,7 +394,7 @@ const getFormularioByDocumento = async (req, res) => {
   try {
     const formResult = await pool.query(
       `SELECT * FROM formularios WHERE documento_id = $1`,
-      [id]
+      [id],
     );
 
     if (formResult.rows.length === 0) {
@@ -436,7 +408,7 @@ const getFormularioByDocumento = async (req, res) => {
     // Obtener preguntas
     const preguntasResult = await pool.query(
       `SELECT * FROM preguntas WHERE formulario_id = $1 ORDER BY id`,
-      [formulario.id]
+      [formulario.id],
     );
 
     const preguntas = preguntasResult.rows;
@@ -444,7 +416,7 @@ const getFormularioByDocumento = async (req, res) => {
     for (const pregunta of preguntas) {
       const altResult = await pool.query(
         `SELECT id, texto FROM alternativas WHERE pregunta_id = $1 ORDER BY id`,
-        [pregunta.id]
+        [pregunta.id],
       );
       pregunta.alternativas = altResult.rows;
     }
@@ -470,7 +442,7 @@ const insertNota = async (req, res) => {
     // Verificar si ya existe nota para actualizar o insertar
     const checkNote = await pool.query(
       `SELECT id FROM notas WHERE alumno_id = $1 AND formulario_id = $2`,
-      [alumno_id, formulario_id]
+      [alumno_id, formulario_id],
     );
 
     if (checkNote.rows.length > 0) {
@@ -482,7 +454,7 @@ const insertNota = async (req, res) => {
           calificacion,
           participaciones_voluntarias || 0,
           checkNote.rows[0].id,
-        ]
+        ],
       );
       return res.status(200).json(result.rows[0]);
     } else {
@@ -495,7 +467,7 @@ const insertNota = async (req, res) => {
           formulario_id,
           calificacion,
           participaciones_voluntarias || 0,
-        ]
+        ],
       );
       return res.status(201).json(result.rows[0]);
     }
@@ -518,7 +490,7 @@ const getMaterialesPendientes = async (req, res) => {
        ) > (
            SELECT COUNT(*) FROM notas n WHERE n.formulario_id = f.id
        )`,
-      [id]
+      [id],
     );
     res.status(200).json(result.rows);
   } catch (error) {
@@ -540,7 +512,7 @@ const getAlumnosSinNota = async (req, res) => {
        AND a.id NOT IN (
            SELECT n.alumno_id FROM notas n WHERE n.formulario_id = $2
        )`,
-      [cursoId, formularioId]
+      [cursoId, formularioId],
     );
     res.status(200).json(result.rows);
   } catch (error) {
@@ -548,6 +520,7 @@ const getAlumnosSinNota = async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
 
 const uploadPlanTrabajo = async (req, res) => {
   try {
@@ -574,7 +547,7 @@ const uploadPlanTrabajo = async (req, res) => {
     const result = await pool.query(
       `INSERT INTO planes_trabajo (titulo, descripcion, ruta_archivo, fecha, curso_id)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [titulo, descripcion, newPath, fecha || new Date(), curso_id]
+      [titulo, descripcion, newPath, fecha || new Date(), curso_id],
     );
 
     res.status(201).json({
@@ -597,16 +570,15 @@ const listPlanesTrabajo = async (req, res) => {
           JOIN clases c ON p.curso_id = c.id
           JOIN docentes d ON c.docente_id = d.id
           WHERE d.usuario_id = $1`,
-      [id]
+      [id],
     );
 
     const BACKEND_URL =
       process.env.BACKEND_URL || "http://localhost:5000";
 
     const planesWithUrl = result.rows.map((plan) => {
-
       const normalizedPath = plan.ruta_archivo.replace(/\\/g, "/");
-      
+
       return {
         ...plan,
         ruta_archivo: `${BACKEND_URL}/${normalizedPath}`,
@@ -625,11 +597,11 @@ const getFechasAsistencia = async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT DISTINCT DATE(fecha) as fecha FROM asistencias WHERE clase_id = $1 ORDER BY fecha DESC`,
-      [id]
+      [id],
     );
     // Format to YYYY-MM-DD
     const fechas = result.rows.map(
-      (r) => r.fecha.toISOString().split("T")[0]
+      (r) => r.fecha.toISOString().split("T")[0],
     );
     res.status(200).json(fechas);
   } catch (error) {
@@ -646,7 +618,7 @@ const getAsistenciaFecha = async (req, res) => {
              FROM asistencias asis 
              JOIN alumnos a ON asis.alumno_id = a.id 
              WHERE asis.clase_id = $1 AND DATE(asis.fecha) = $2`,
-      [cursoId, fecha]
+      [cursoId, fecha],
     );
     res.status(200).json(result.rows);
   } catch (error) {
@@ -659,7 +631,7 @@ const getAsistenciaFecha = async (req, res) => {
              FROM asistencias asis 
              JOIN alumnos a ON asis.alumno_id = a.id 
              WHERE asis.clase_id = $1 AND DATE(asis.fecha) = $2`,
-      [cursoId, fecha]
+      [cursoId, fecha],
     );
     res.status(200).json(result.rows);
   } catch (error) {
@@ -674,7 +646,7 @@ const getDashboardStats = async (req, res) => {
     // 1. Get Docente ID
     const docenteRes = await pool.query(
       "SELECT id FROM docentes WHERE usuario_id = $1",
-      [id]
+      [id],
     );
     if (docenteRes.rows.length === 0) {
       return res.status(404).json({ error: "Docente no encontrado" });
@@ -684,7 +656,7 @@ const getDashboardStats = async (req, res) => {
     // 2. Count Courses
     const cursosRes = await pool.query(
       "SELECT COUNT(*) FROM clases WHERE docente_id = $1",
-      [docenteId]
+      [docenteId],
     );
     const totalCursos = parseInt(cursosRes.rows[0].count);
 
@@ -694,7 +666,7 @@ const getDashboardStats = async (req, res) => {
            FROM alumnos a 
            JOIN clases c ON a.clase_id = c.id 
            WHERE c.docente_id = $1`,
-      [docenteId]
+      [docenteId],
     );
     const totalAlumnos = parseInt(alumnosRes.rows[0].count);
 
@@ -704,7 +676,7 @@ const getDashboardStats = async (req, res) => {
        FROM asistencias 
        WHERE DATE(fecha) = CURRENT_DATE 
        AND clase_id IN (SELECT id FROM clases WHERE docente_id = $1)`,
-      [docenteId]
+      [docenteId],
     );
     const clasesHoy = parseInt(hoyRes.rows[0].count);
 
@@ -719,7 +691,7 @@ const getDashboardStats = async (req, res) => {
            LEFT JOIN asistencias a ON c.id = a.clase_id
            WHERE c.docente_id = $1
            GROUP BY c.id, c.nombre`,
-      [docenteId]
+      [docenteId],
     );
 
     // 6. Grades Stats
@@ -732,7 +704,7 @@ const getDashboardStats = async (req, res) => {
            LEFT JOIN notas n ON f.id = n.formulario_id
            WHERE c.docente_id = $1
            GROUP BY c.id, c.nombre`,
-      [docenteId]
+      [docenteId],
     );
 
     const alumnosCountRes = await pool.query(
@@ -742,7 +714,7 @@ const getDashboardStats = async (req, res) => {
           LEFT JOIN alumnos a ON c.id = a.clase_id
           WHERE c.docente_id = $1
           GROUP BY c.id, c.nombre`,
-      [docenteId]
+      [docenteId],
     );
 
     res.status(200).json({
@@ -758,9 +730,6 @@ const getDashboardStats = async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
-
-
-
 
 module.exports = {
   listCursosDocente,
@@ -782,5 +751,5 @@ module.exports = {
   getFechasAsistencia,
   getAsistenciaFecha,
   getDashboardStats,
-  getMaterialById
+  getMaterialById,
 };

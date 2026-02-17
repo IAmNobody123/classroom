@@ -26,7 +26,10 @@ const registerUsers = async (req, res) => {
         correo,
       ]);
       res.status(201).json({ success: true, user: newUser });
+      return;
     }
+
+    res.status(201).json({ success: true, user: result.rows[0] });
   } catch (error) {
     console.error("Error en registro:", error);
     res.status(500).json({ error: "Error en el servidor" });

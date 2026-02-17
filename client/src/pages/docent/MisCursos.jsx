@@ -143,6 +143,13 @@ export default function MisCursos() {
       setNotification("Alumno agregado exitosamente");
       setPreview(null);
       setIsOpenAgregar(false);
+      setIdCurso(null);
+      setFile(null);
+      setDiscapacidad(null);
+      setNombreAlumno(null);
+      setApellidoAlumno(null);
+      
+
     } catch (error) {
       console.log(error);
       setNotification("Error al agregar alumno");
@@ -162,6 +169,7 @@ export default function MisCursos() {
         timer: 1500,
       });
     }
+    setNotification("");
   }, [notification]);
 
   return (
@@ -185,6 +193,7 @@ export default function MisCursos() {
           <div className="cursoCard" key={curso.id}>
             <h2>{curso.nombre}</h2>
             <p>{curso.descripcion}</p>
+            <br />
             <div className="botonesCurso">
               <button onClick={() => handleVerDetalles(curso.id)}>
                 Ver Historial Asistencia
@@ -271,14 +280,15 @@ export default function MisCursos() {
               )}
             </div>
           </div>
-          <button
+         
+        </form>
+         <button
             type="button"
             className="botonAgregar"
             onClick={() => hanldleSubmit()}
           >
             Agregar
           </button>
-        </form>
       </Modal>
 
       {/* modal asistencia */}

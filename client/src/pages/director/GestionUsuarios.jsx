@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import "../../styles/director/gestionUsuarios.css";
 import Modal from "../../components/Modal";
 import {
+  desactivarUser,
   getListUsers,
   registerUser,
 } from "../../front-back/apiDirector";
 import Swal from "sweetalert2";
 import Table from "../../components/Table";
+import Toast from "../../components/Toast";
 
 function GestionUsuarios() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +22,10 @@ function GestionUsuarios() {
     imagen: null,
     imagenPreview: "",
   });
+  const columns = ["nombre", "correo", "opciones"];
   const [users, setUsers] = useState([]);
+  const [filtroEstado, setFiltroEstado] = useState("activo");
+
   useEffect(() => {
     if (alerta.mensaje) {
       Swal.fire({
@@ -79,11 +84,21 @@ function GestionUsuarios() {
     });
   };
 
-  const columns = ["nombre", "correo", "opciones"];
-
   const getDataUsers = async () => {
     const result = await getListUsers();
     setUsers(result);
+  };
+
+  const handleDesactivar = async (id) => {
+    const response = await desactivarUser(id);
+    if (response.success) {
+      Toast(
+        "Desactivado",
+        "El usuario ha sido desactivado",
+        "success",
+      );
+      getDataUsers();
+    }
   };
 
   useEffect(() => {
@@ -215,8 +230,36 @@ function GestionUsuarios() {
           </form>
         </Modal>
       </div>
+      <div className="filtro-estado">
+        <div
+          onClick={() => setFiltroEstado("activo")}
+          className="botonFiltro"
+        >
+          Activos
+        </div>
 
-      <Table columns={columns} data={users} />
+        <div
+          onClick={() => setFiltroEstado("inactivo")}
+          className="botonFiltro"
+        >
+          Inactivos
+        </div>
+
+        <div
+          onClick={() => setFiltroEstado("todos")}
+          className="botonFiltro"
+        >
+          Todos
+        </div>
+      </div>
+      <Table
+        columns={columns}
+        data={users.filter((user) => {
+          if (filtroEstado === "todos") return true;
+          return user.estado === filtroEstado;
+        })}
+        onDesactivar={handleDesactivar}
+      />
     </div>
   );
 }

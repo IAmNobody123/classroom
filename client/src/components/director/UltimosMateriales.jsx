@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import MaterialItem from './MaterialItem';
 import { listadoMaterialCurso } from '../../front-back/apiDocenteCursos';
 
-export default function UltimosMateriales({ refresh }) {
+export default function UltimosMateriales({ refresh, idDocente }) {
   const [materiales, setMateriales] = useState([]);
 
   useEffect(() => {
-    const response = listadoMaterialCurso();
+    const response = listadoMaterialCurso( idDocente );
     response.then((data) => {
       setMateriales(data);
     });
-  }, [refresh]);
+  }, [refresh, idDocente]);
 
   return (
     <div className="ultimos-materiales">

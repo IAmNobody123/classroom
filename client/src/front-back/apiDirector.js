@@ -11,17 +11,17 @@ export const registerUser = async (formData) => {
 export const getListUsers = async () => {
   const response = await fetch(`${API_URL}/listUsers`);
   return response.json();
-}
+};
 
 export const getListDocentes = async () => {
   const response = await fetch(`${API_URL}/listDocentes`);
   return response.json();
-}
+};
 
 export const getListCursos = async () => {
   const response = await fetch(`${API_URL}/listCursos`);
   return response.json();
-}
+};
 
 export const insertCurso = async (data) => {
   const response = await fetch(`${API_URL}/insertCurso`, {
@@ -31,7 +31,7 @@ export const insertCurso = async (data) => {
     },
     body: JSON.stringify(data),
   });
-   if (!response.ok) {
+  if (!response.ok) {
     const text = await response.text();
     console.error("Error de servidor:", text);
     return { success: false, error: "Error en el servidor" };
@@ -39,7 +39,7 @@ export const insertCurso = async (data) => {
 
   const result = await response.json();
   return { success: true, ...result };
-}
+};
 export const getDataDashboard = async () => {
   const response = await fetch(`${API_URL}/getDataDashboard`);
   return response.json();
@@ -49,3 +49,23 @@ export const listAllPlanesTrabajo = async () => {
   const response = await fetch(`${API_URL}/listAllPlanesTrabajo`);
   return response.json();
 };
+
+export const desactivarUser = async (id) => {
+  const response = await fetch(`${API_URL}/desactivarUser/${id}`, {
+    method: "PUT",
+  });
+  return response.json();
+};
+
+
+export const getReportes = async (data) => {
+  const response = await fetch(`${API_URL}/getReportes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { listAllPlanesTrabajo } from "../../front-back/apiDirector";
 import mammoth from "mammoth";
 import Modal from "../../components/Modal";
+import "../../styles/docente/PlanTrabajo.css";
 
 
 export default function PlanTrabajoVer() {
@@ -146,7 +147,7 @@ export default function PlanTrabajoVer() {
           <div
           >
             {previewType === "pdf" ? (
-              <iframe
+              <iframe style={{ width: "100%", height: "500px" }}
                 src={previewUrl}
               ></iframe>
             ) : previewType === "html" ? (

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Modal from "./Modal";
 
-const Table = ({ columns, data }) => {
+const Table = ({ columns, data, onDesactivar }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [detalles, setDetalles] = useState({});
 
@@ -9,9 +9,9 @@ const Table = ({ columns, data }) => {
     setDetalles(usuario);
     setIsOpen(true);
   };
-
   return (
     <div className="table-container">
+      
       <table className="custom-table">
         <thead>
           <tr>
@@ -46,7 +46,8 @@ const Table = ({ columns, data }) => {
                       >
                         Ver detalles
                       </button>
-                      <button className="action-button eliminar">
+                      <button className="action-button eliminar"
+                      onClick={()=> onDesactivar(row.id)}>
                         Eliminar
                       </button>
                     </td>

@@ -46,8 +46,8 @@ export const materialCurso = async (formData) => {
   return response.json();
 };
 
-export const listadoMaterialCurso = async () => {
-  const response = await fetch(`${API_URL}/listadoMaterialCurso`, {
+export const listadoMaterialCurso = async (id) => {
+  const response = await fetch(`${API_URL}/listadoMaterialCurso/${id}`, {
     method: "GET",
   });
   return response.json();

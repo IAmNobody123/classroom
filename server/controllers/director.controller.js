@@ -52,10 +52,15 @@ const dataDashboard = async (req, res) => {
       `select count(*) from clases 
       `,
     );
+    const planTrabajo = await pool.query(
+      `select count(*) from planes_trabajo 
+      `,
+    );
     res.status(200).json({
       alumnos: alumnos.rows[0].count,
       docentes: docentes.rows[0].count,
       cursos: cursos.rows[0].count,
+      planTrabajo: planTrabajo.rows[0].count,
     });
   } catch (error) {
     console.error("Error en la consulta:", error);
@@ -90,10 +95,47 @@ const listAllPlanesTrabajo = async (req, res) => {
   }
 };
 
+const desactivarUser = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      "UPDATE docentes SET estado = 'inactivo' WHERE id = $1 RETURNING *",
+      [id],
+    );
+    res.json({
+      success: true,
+      message: "Usuario desactivado correctamente",
+    });
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+const getReportes = async (req, res) => {
+  const { curso, fecha, tipo } = req.body;
+  try {
+    const result = await pool.query(
+      `select al.nombre , a.hora_registro, a.presente
+from clases c inner join alumnos al on c.id = al.clase_id
+inner join asistencias a on  a.alumno_id = al.id
+WHERE a.hora_registro::date = $1
+ and c.nombre = $2 `,
+      [fecha, curso],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
 module.exports = {
   getListDocentes,
   getListCursos,
   insertCurso,
   dataDashboard,
   listAllPlanesTrabajo,
+  desactivarUser,
+  getReportes,
 };

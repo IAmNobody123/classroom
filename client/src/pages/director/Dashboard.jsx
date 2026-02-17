@@ -52,6 +52,11 @@ const Dashboard = () => {
       cantidad: data.cursos,
       icon: <FaSchool />,
     },
+    {
+      titulo: "Plan de trabajo",
+      cantidad: data.planTrabajo,
+      icon: <FaUserGraduate />,
+    }
   ];
 
   const loadData = async () => {
@@ -83,7 +88,7 @@ const Dashboard = () => {
         {cards.map((item, index) => (
           <div className="card" key={index}>
             <div className="card-icon">{item.icon}</div>
-            <h3>{item.titulo}</h3>
+            <h4>{item.titulo}</h4>
             <p>{item.cantidad}</p>
           </div>
         ))}
