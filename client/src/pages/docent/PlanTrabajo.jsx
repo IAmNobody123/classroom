@@ -8,6 +8,7 @@ import {
 import Modal from "../../components/Modal";
 import "../../styles/docente/PlanTrabajo.css";
 import mammoth from "mammoth";
+import Toast from "../../components/Toast";
 
 export default function PlanTrabajo() {
   const { user } = useAuth();
@@ -69,13 +70,18 @@ export default function PlanTrabajo() {
     formData.append("archivo", archivo);
 
     try {
-      await uploadPlanTrabajo(formData);
-      alert("Plan guardado exitosamente");
+      const result =await uploadPlanTrabajo(formData);
+      if (result.error) {
+        alert(result.error);
+        return;
+      }
+      Toast("Guardado", "Plan de trabajo guardado", "success");
       setShowModal(false);
       setTitulo("");
       setDescripcion("");
       setArchivo(null);
-      listaPlanes();
+      listaPlanes(user.id);
+      return;
     } catch (error) {
       console.error(error);
       alert("Error al guardar");
@@ -267,6 +273,7 @@ export default function PlanTrabajo() {
             <div>
               <label>Fecha:</label>
               <input
+              readOnly
                 type="date"
                 value={fecha}
                 onChange={(e) => setFecha(Date.parse(e.target.value))}
@@ -291,23 +298,15 @@ export default function PlanTrabajo() {
           isOpen={showPreviewModal}
           onClose={() => setShowPreviewModal(false)}
           title={previewTitle || "Vista Previa"}
+          className="preview-modal"
         >
-          <div
-            style={{
-              width: "100%",
-              height: "500px",
-              overflowY: "auto",
-              background: "#fff",
-              padding: "10px",
-              border: "1px solid #ddd",
-            }}
-          >
+          <div>
             {previewType === "pdf" ? (
               <iframe
                 src={previewUrl}
                 style={{
                   width: "100%",
-                  height: "100%",
+                  height: "100vh",
                   border: "none",
                 }}
               ></iframe>

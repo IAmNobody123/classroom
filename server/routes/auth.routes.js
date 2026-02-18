@@ -75,14 +75,7 @@ const upload2 = multer({ storage: storage2 });
 
 const storageMaterial = multer.diskStorage({
   destination: (req, file, cb) => {
-    // const {idDocente,gradoCurso} = req.body;
-    // console.log(idDocente,gradoCurso);
-    // const dir = path.join("uploads", "docs", `${idDocente}`, `${gradoCurso}`);
-    // if (!fs.existsSync(dir)) {
-    //   fs.mkdirSync(dir, { recursive: true });
-    // }
 
-    // cb(null, dir);
     cb(null, "uploads/docs/temp");
     if (!fs.existsSync("uploads/docs/temp")) {
       fs.mkdirSync("uploads/docs/temp", { recursive: true });
@@ -99,6 +92,32 @@ const storageMaterial = multer.diskStorage({
   },
 })
 const uploadMaterial = multer({ storage: storageMaterial });
+
+const storagePlanTrabajo = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = "uploads/docs/planes";
+
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    cb(null, dir);
+  },
+
+  filename: (req, file, cb) => {
+    const timestamp = Date.now();
+    const ext = path.extname(file.originalname);
+
+    const sanitizedName = file.originalname
+      .replace(ext, "")
+      .trim()
+      .replace(/\s+/g, "_");
+
+    cb(null, `${sanitizedName}_${timestamp}${ext}`);
+  },
+});
+
+const uploadPlan = multer({ storage: storagePlanTrabajo });
 
 router.post("/login", login);
 router.post("/register", register);
@@ -124,7 +143,7 @@ router.post(
 );
 router.get("/listAlumnosCursos/:id", listAlumnosCursos);
 router.post("/marcarAsistencia", marcarAsistencia);
-router.post("/materialCurso", uploadMaterial.single("material"), materialCurso);
+router.post("/materialCurso", uploadPlan.single("archivo"), materialCurso);
 router.get("/listadoMaterialCurso/:id", listadoMaterialCurso);
 router.get("/materialPorCurso/:id", materialPorCurso);
 router.post("/createFormulario", createFormulario);

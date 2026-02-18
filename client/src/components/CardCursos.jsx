@@ -31,7 +31,7 @@ export default function CardCursos({
 
     const formData = new FormData();
     formData.append("nombre", nombreMaterial);
-    formData.append("material", material);
+    formData.append("archivo", material);
     formData.append("curso", id);
     formData.append("gradoCurso", grado);
     formData.append("idDocente", idDocente);

@@ -2,7 +2,9 @@ const pool = require("../db/database");
 const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
-const { convertirWordAPdf } = require("./convertToPdf");
+const convertirWordAPdf = require("./convertToPdf");
+
+
 
 const listCursosDocente = async (req, res) => {
   const { id } = req.params;
@@ -101,7 +103,6 @@ const marcarAsistencia = async (req, res) => {
   }
 };
 
-
 const materialCurso = async (req, res) => {
   try {
     const { curso, nombre, idDocente, gradoCurso } = req.body;
@@ -155,7 +156,6 @@ const materialCurso = async (req, res) => {
 
 const listadoMaterialCurso = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   const BACKEND_URL =
     process.env.BACKEND_URL || "http://localhost:5000";
   try {
@@ -187,10 +187,35 @@ const listadoMaterialCurso = async (req, res) => {
   }
 };
 ///trabajando aqui -> enviar la url del pdf al frontend
+// const getMaterialById = async (req, res) => {
+//   const { id } = req.params;
+//   const BACKEND_URL =
+//     process.env.BACKEND_URL || "http://localhost:5000";
+//   try {
+//     const result = await pool.query(
+//       `select d.id, d.titulo as titulo, d.ruta_archivo as ruta, d.fecha_subida as subido,
+//       c.nombre, c.grado
+//       from documentos d inner join clases c on d.curso_id = c.id where d.id = $1`,
+//       [id],
+//     );
+//     const convert = convertirWordAPdf(
+//       BACKEND_URL + result.rows[0].ruta,
+//     );
+//     console.log(convert);
+//     res.status(200).json(result.rows[0]);
+//   } catch (error) {
+//     console.error(
+//       "Error al obtener material de curso del docente:",
+//       error,
+//     );
+//     res.status(500).json({ error: "Error en el servidor" });
+//   }
+// };
+
+
 const getMaterialById = async (req, res) => {
   const { id } = req.params;
-  const BACKEND_URL =
-    process.env.BACKEND_URL || "http://localhost:5000";
+
   try {
     const result = await pool.query(
       `select d.id, d.titulo as titulo, d.ruta_archivo as ruta, d.fecha_subida as subido,
@@ -198,10 +223,21 @@ const getMaterialById = async (req, res) => {
       from documentos d inner join clases c on d.curso_id = c.id where d.id = $1`,
       [id],
     );
-    const convert = convertirWordAPdf(
-      BACKEND_URL + result.rows[0].ruta,
-    );
-    res.status(200).json(result.rows[0]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Material no encontrado" });
+    }
+
+    const archivo = result.rows[0];
+
+    const rutaAbsoluta = path.join(archivo.ruta);
+
+    const pdfPath = await convertirWordAPdf(rutaAbsoluta);
+    res.status(200).json({
+      ...archivo,
+      pdf: pdfPath,
+    });
+
   } catch (error) {
     console.error(
       "Error al obtener material de curso del docente:",
@@ -284,20 +320,12 @@ const createFormulario = async (req, res) => {
 const listCursosAlumno = async (req, res) => {
   const { id } = req.params; // Usuario ID (from token)
   try {
-    // Asumiendo que se ha agregado usuario_id a la tabla alumnos
-    // Si no, esto fallará o requerirá que el ID sea el de 'alumnos' directamente.
-    // Vamos a intentar buscar por usuario_id primero.
-
-    // Primero obtenemos el alumno asociado al usuario
     const alumnoResult = await pool.query(
       `SELECT id, clase_id FROM alumnos WHERE usuario_id = $1`,
       [id],
     );
 
     if (alumnoResult.rows.length === 0) {
-      // Fallback: Si no hay usuario_id en alumnos, tal vez el ID pasado sea el del alumno?
-      // Pero el login devuelve el ID de usuario.
-      // Asumiremos que el usuario ejecutó el SQL necesario.
       return res
         .status(404)
         .json({ message: "Alumno no encontrado para este usuario" });
@@ -305,8 +333,6 @@ const listCursosAlumno = async (req, res) => {
 
     const alumno = alumnoResult.rows[0];
 
-    // Obtener la clase del alumno
-    // Nota: Si un alumno solo puede estar en una clase (según schema), devolvemos esa.
     const cursosResult = await pool.query(
       `SELECT c.id, c.nombre, c.descripcion, c.grado, d.nombre as docente 
        FROM clases c 
@@ -324,11 +350,8 @@ const listCursosAlumno = async (req, res) => {
 
 const submitExamen = async (req, res) => {
   const { alumno_id, formulario_id, respuestas } = req.body;
-  // respuestas: [{ pregunta_id, alternativa_id }]
 
   try {
-    // Calcular nota
-    // 1. Obtener preguntas y correctas
     const preguntasResult = await pool.query(
       `SELECT p.id as pregunta_id, a.id as alternativa_id 
              FROM preguntas p 
@@ -359,11 +382,8 @@ const submitExamen = async (req, res) => {
     });
 
     const calificacion = Math.round(
-      (correctCount / totalQuestions) * 100,
+      (correctCount / totalQuestions) * 20,
     );
-
-    // Guardar Nota
-    // Verificar si ya existe
     const checkResult = await pool.query(
       `SELECT id FROM notas WHERE alumno_id = $1 AND formulario_id = $2`,
       [alumno_id, formulario_id],
@@ -525,8 +545,6 @@ const getAlumnosSinNota = async (req, res) => {
 const uploadPlanTrabajo = async (req, res) => {
   try {
     const { titulo, descripcion, curso_id, fecha } = req.body;
-    // fecha might be passed or we use current Date. User said "la fecha", could be manual.
-    // metadata: nombre del material (titulo), descripcion, fecha, curso.
 
     if (!req.file) {
       return res
@@ -534,7 +552,6 @@ const uploadPlanTrabajo = async (req, res) => {
         .json({ error: "No se envió ningún archivo" });
     }
 
-    // Move file
     const dir = "uploads/docs/planes";
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -562,7 +579,6 @@ const uploadPlanTrabajo = async (req, res) => {
 
 const listPlanesTrabajo = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   try {
     const result = await pool.query(
       `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso

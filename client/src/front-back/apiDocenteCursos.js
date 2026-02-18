@@ -36,8 +36,6 @@ export const marcarAsistencia = async (data) => {
   return response.json();
 };
 
-
-
 export const materialCurso = async (formData) => {
   const response = await fetch(`${API_URL}/materialCurso`, {
     method: "POST",
@@ -47,9 +45,12 @@ export const materialCurso = async (formData) => {
 };
 
 export const listadoMaterialCurso = async (id) => {
-  const response = await fetch(`${API_URL}/listadoMaterialCurso/${id}`, {
-    method: "GET",
-  });
+  const response = await fetch(
+    `${API_URL}/listadoMaterialCurso/${id}`,
+    {
+      method: "GET",
+    },
+  );
   return response.json();
 };
 
@@ -61,7 +62,9 @@ export const materialPorCurso = async (id) => {
 };
 
 export const getFormularioByDocumento = async (id) => {
-  const response = await fetch(`${API_URL}/getFormularioByDocumento/${id}`);
+  const response = await fetch(
+    `${API_URL}/getFormularioByDocumento/${id}`,
+  );
   return response.json();
 };
 
@@ -93,7 +96,9 @@ export const submitExamen = async (data) => {
 };
 
 export const getMaterialesPendientes = async (id) => {
-  const response = await fetch(`${API_URL}/getMaterialesPendientes/${id}`);
+  const response = await fetch(
+    `${API_URL}/getMaterialesPendientes/${id}`,
+  );
   return response.json();
 };
 
@@ -111,18 +116,22 @@ export const getAlumnosSinNota = async (data) => {
 export const uploadPlanTrabajo = async (formData) => {
   const response = await fetch(`${API_URL}/uploadPlanTrabajo`, {
     method: "POST",
-    body: formData, // FormData handles headers
+    body: formData, 
   });
   return response.json();
 };
 
 export const listPlanesTrabajo = async (docenteId) => {
-  const response = await fetch(`${API_URL}/listPlanesTrabajo/${docenteId}`);
+  const response = await fetch(
+    `${API_URL}/listPlanesTrabajo/${docenteId}`,
+  );
   return response.json();
 };
 
 export const getFechasAsistencia = async (cursoId) => {
-  const response = await fetch(`${API_URL}/getFechasAsistencia/${cursoId}`);
+  const response = await fetch(
+    `${API_URL}/getFechasAsistencia/${cursoId}`,
+  );
   return response.json();
 };
 
@@ -130,9 +139,9 @@ export const getAsistenciaFecha = async (cursoId, fecha) => {
   const response = await fetch(`${API_URL}/getAsistenciaFecha`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ cursoId, fecha })
+    body: JSON.stringify({ cursoId, fecha }),
   });
   return response.json();
 };
@@ -147,7 +156,10 @@ export const getMaterialById = async (id) => {
   return response.json();
 };
 
+
 export const getDataDashboardDocente = async (id) => {
-  const response = await fetch(`${API_URL}/getDataDashboardDocente/${id}`);
+  const response = await fetch(
+    `${API_URL}/getDataDashboardDocente/${id}`,
+  );
   return response.json();
 };

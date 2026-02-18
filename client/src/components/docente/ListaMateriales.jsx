@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { materialPorCurso } from "../../front-back/apiDocenteCursos";
 import Modal from "../Modal";
 import FormularioPreguntas from "./FormularioPreguntas";
+import Swal from "sweetalert2";
 
 export default function ListaMateriales({ idCurso }) {
   const [materiales, setMateriales] = useState([]);
@@ -89,7 +90,6 @@ export default function ListaMateriales({ idCurso }) {
       preguntas: preguntas
     };
     try {
-      // Asumiendo que existe una variable de entorno o URL base
       const BACKEND_URL = "http://localhost:5000";
       const response = await fetch(`${BACKEND_URL}/api/createFormulario`, {
         method: "POST",
@@ -100,15 +100,30 @@ export default function ListaMateriales({ idCurso }) {
       });
 
       if (response.ok) {
-        alert("Formulario guardado exitosamente");
+        Swal.fire({
+          icon: "success",
+          title: "¡Formulario creado con éxito!",
+          showConfirmButton: false,
+          timer: 1500
+        })
         setShowModal(false);
         setPreguntas([{ enunciado: "", alternativas: [] }]); // Reset
       } else {
-        alert("Error al guardar formulario");
+        Swal.fire({
+          icon: "error",
+          title: "Error al crear el formulario",
+          showConfirmButton: false,
+          timer: 1500
+        })
       }
     } catch (error) {
       console.error(error);
-      alert("Error de conexión");
+      Swal.fire({
+          icon: "error",
+          title: "Error de conexion",
+          showConfirmButton: false,
+          timer: 1500
+        })
     }
   };
 

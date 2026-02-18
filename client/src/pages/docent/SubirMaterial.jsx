@@ -10,14 +10,11 @@ export default function SubirMaterial() {
   const [misCursos, setMisCursos] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-
-
   const handleMaterialAdded = () => {
     setRefresh(prev => !prev);
   }
 
     const dataCursos = async (id) => {
-      console.log(id);
       const res = await getListCursosDocente(id);
       setMisCursos(res);
     };
