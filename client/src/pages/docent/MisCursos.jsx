@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import ModalAsistencia from "../../components/docente/ModalAsistencia";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import useAuth from "../../context/useAuth";
 
 export default function MisCursos() {
   const [misCursos, setMisCursos] = useState([]);
@@ -36,11 +37,10 @@ export default function MisCursos() {
   );
   const [listaAsistenciaDia, setListaAsistenciaDia] = useState(null);
 
-  const user = localStorage.getItem("user");
-  const id = JSON.parse(user).id;
+  const { user } = useAuth();
+  const id = user?.id;
 
   const dataCursos = async (id) => {
-    console.log(id);
     const res = await getListCursosDocente(id);
     setMisCursos(res);
   };
@@ -110,7 +110,7 @@ export default function MisCursos() {
         console.error(e);
       }
     } else {
-      setListaAsistenciaDia(null); 
+      setListaAsistenciaDia(null);
     }
   };
 
@@ -121,10 +121,9 @@ export default function MisCursos() {
       );
       const dateString = offsetDate.toISOString().split("T")[0];
       if (fechasAsistencia.includes(dateString)) {
-        return "highlight-attendance"; 
+        return "highlight-attendance";
       }
     }
-    
   };
 
   const hanldleSubmit = async () => {
@@ -148,8 +147,6 @@ export default function MisCursos() {
       setDiscapacidad(null);
       setNombreAlumno(null);
       setApellidoAlumno(null);
-      
-
     } catch (error) {
       console.log(error);
       setNotification("Error al agregar alumno");
@@ -157,7 +154,9 @@ export default function MisCursos() {
   };
 
   useEffect(() => {
-    dataCursos(id);
+    if(id) {
+      dataCursos(id);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -195,9 +194,6 @@ export default function MisCursos() {
             <p>{curso.descripcion}</p>
             <br />
             <div className="botonesCurso">
-              <button onClick={() => handleVerDetalles(curso.id)}>
-                Ver Historial Asistencia
-              </button>
               <button onClick={() => handleAgregarAlumno(curso.id)}>
                 Agregar alumnos
               </button>
@@ -207,6 +203,9 @@ export default function MisCursos() {
                 }
               >
                 Asistencia
+              </button>
+              <button onClick={() => handleVerDetalles(curso.id)}>
+                Ver Historial Asistencia
               </button>
             </div>
           </div>
@@ -280,15 +279,14 @@ export default function MisCursos() {
               )}
             </div>
           </div>
-         
         </form>
-         <button
-            type="button"
-            className="botonAgregar"
-            onClick={() => hanldleSubmit()}
-          >
-            Agregar
-          </button>
+        <button
+          type="button"
+          className="botonAgregar"
+          onClick={() => hanldleSubmit()}
+        >
+          Agregar
+        </button>
       </Modal>
 
       {/* modal asistencia */}

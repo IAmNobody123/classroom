@@ -5,6 +5,7 @@ const pool = require("../db/database");
 const SECRET_KEY = process.env.JWT_SECRET;
 
 const login = async (req, res) => {
+  const backendUrl = process.env.BACKEND_URL;
   const { username, password } = req.body;
   try {
     const query = "SELECT * FROM usuarios WHERE username = $1";
@@ -20,12 +21,14 @@ const login = async (req, res) => {
     if (!match) {
       return res.status(401).json({ error: "Contraseña incorrecta" });
     }
-    
+
     const payload = {
       id: user.id,
       username: user.username,
       rol: user.rol,
+      imagen: `${backendUrl}/uploads/img/perfil/${user.imagen}`,
     };
+
 
     const token = jwt.sign(payload, SECRET_KEY, {
       expiresIn: "1h",
@@ -53,13 +56,10 @@ const validateToken = (req, res) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
+
     res.json({
       valid: true,
-      user: {
-        id: decoded.id,
-        username: decoded.username,
-        rol: decoded.rol,
-      },
+      user: decoded
     });
   } catch (error) {
     res.status(401).json({ error: "Token inválido" });

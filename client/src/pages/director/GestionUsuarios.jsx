@@ -23,7 +23,7 @@ function GestionUsuarios() {
     imagenPreview: "",
   });
   const columns = ["nombre", "correo", "opciones"];
-  const [users, setUsers] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [filtroEstado, setFiltroEstado] = useState("activo");
 
   useEffect(() => {
@@ -86,7 +86,7 @@ function GestionUsuarios() {
 
   const getDataUsers = async () => {
     const result = await getListUsers();
-    setUsers(result);
+    setUsuarios(result);
   };
 
   const handleDesactivar = async (id) => {
@@ -254,7 +254,7 @@ function GestionUsuarios() {
       </div>
       <Table
         columns={columns}
-        data={users.filter((user) => {
+        data={usuarios.filter((user) => {
           if (filtroEstado === "todos") return true;
           return user.estado === filtroEstado;
         })}

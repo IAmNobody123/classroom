@@ -4,8 +4,6 @@ const multer = require("multer");
 const fs = require("fs");
 const convertirWordAPdf = require("./convertToPdf");
 
-
-
 const listCursosDocente = async (req, res) => {
   const { id } = req.params;
   try {
@@ -105,7 +103,8 @@ const marcarAsistencia = async (req, res) => {
 
 const materialCurso = async (req, res) => {
   try {
-    const { curso, nombre, idDocente, gradoCurso } = req.body;
+    const { curso, nombre, idDocente, gradoCurso, urlVideo } =
+      req.body;
     if (!req.file) {
       return res
         .status(400)
@@ -138,10 +137,10 @@ const materialCurso = async (req, res) => {
 
     // Guardar registro en la base de datos
     const result = await pool.query(
-      `INSERT INTO documentos (titulo, ruta_archivo, fecha_subida, docente_id, grado, curso_id)
-       VALUES ($1, $2, NOW(), $3, $4, $5)
+      `INSERT INTO documentos (titulo, ruta_archivo, fecha_subida, docente_id, grado, curso_id, linkVideo)
+       VALUES ($1, $2, NOW(), $3, $4, $5, $6)
        RETURNING *`,
-      [nombre, newPath, idDocenteReal, gradoCurso, curso],
+      [nombre, newPath, idDocenteReal, gradoCurso, curso, urlVideo],
     );
 
     res.status(201).json({
@@ -162,7 +161,7 @@ const listadoMaterialCurso = async (req, res) => {
     const result = await pool.query(
       `
       select d.id, d.titulo as titulo, d.fecha_subida as subido,
-        c.nombre, c.grado, d.docente_id
+        c.nombre, c.grado, d.docente_id, d.linkVideo 
         from documentos d 
 		inner join clases c on d.curso_id = c.id
 		inner join docentes de on de.id = d.docente_id
@@ -178,6 +177,7 @@ const listadoMaterialCurso = async (req, res) => {
       subido: m.subido,
       nombre: m.nombre,
       grado: m.grado,
+      linkVideo: m.linkvideo,
     }));
 
     res.status(200).json(data);
@@ -212,7 +212,6 @@ const listadoMaterialCurso = async (req, res) => {
 //   }
 // };
 
-
 const getMaterialById = async (req, res) => {
   const { id } = req.params;
 
@@ -225,7 +224,9 @@ const getMaterialById = async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Material no encontrado" });
+      return res
+        .status(404)
+        .json({ error: "Material no encontrado" });
     }
 
     const archivo = result.rows[0];
@@ -237,7 +238,6 @@ const getMaterialById = async (req, res) => {
       ...archivo,
       pdf: pdfPath,
     });
-
   } catch (error) {
     console.error(
       "Error al obtener material de curso del docente:",
@@ -541,7 +541,6 @@ const getAlumnosSinNota = async (req, res) => {
   }
 };
 
-
 const uploadPlanTrabajo = async (req, res) => {
   try {
     const { titulo, descripcion, curso_id, fecha } = req.body;
@@ -733,6 +732,13 @@ const getDashboardStats = async (req, res) => {
       [docenteId],
     );
 
+    const alumnos = await pool.query(
+      `select a.nombre, a.apellido, a.discapacidad, c.nombre as curso, c.grado
+          from alumnos a inner join clases c on a.clase_id = c.id
+          where c.docente_id = $1`,
+      [docenteId],
+    );
+
     res.status(200).json({
       cursos: totalCursos,
       alumnos: totalAlumnos,
@@ -740,9 +746,81 @@ const getDashboardStats = async (req, res) => {
       clasesHoy: clasesHoy,
       asistencia: attendanceRes.rows,
       notas: gradesRes.rows,
+      alumnosData: alumnos.rows,
     });
   } catch (error) {
     console.error("Error en dashboard stats:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+const getAllMaterialesPendientes = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      `SELECT *
+      FROM documentos
+      WHERE curso_id = $1
+      AND revisado = false;`,
+      [id],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
+const updateEstadoMaterial = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const result = await pool.query(
+      `UPDATE documentos
+        SET revisado = true
+        WHERE id = $1;`,
+      [id],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+const getParticipaciones = async (req, res) => {
+  const { docId, cursoId } = req.params;
+  try {
+    const result = await pool.query(
+      `SELECT 
+          a.id,
+          a.nombre,
+          a.apellido,
+          COUNT(p.id)::int as participaciones
+      FROM alumnos a
+      LEFT JOIN participaciones p 
+          ON p.alumno_id = a.id
+          AND p.documento_id = $1
+      WHERE a.clase_id = $2
+      GROUP BY a.id;`,
+      [docId, cursoId],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+const insertParticipaciones = async (req, res) => {
+  const { alumno_id, documento_id} = req.body;
+  try {
+    const result = await pool.query(
+      `INSERT INTO participaciones (alumno_id, documento_id, nota, fecha_revision)
+        VALUES ($1, $2, 1, NOW());`,
+      [alumno_id, documento_id],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
@@ -768,4 +846,8 @@ module.exports = {
   getAsistenciaFecha,
   getDashboardStats,
   getMaterialById,
+  getAllMaterialesPendientes,
+  updateEstadoMaterial,
+  getParticipaciones,
+  insertParticipaciones,
 };

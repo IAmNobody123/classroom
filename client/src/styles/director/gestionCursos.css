@@ -139,3 +139,59 @@
 .buttonAddCurso:hover{
   background-color: var(--guinda-hover);
 }
+
+
+/*  */
+.cursoDetalleContainer {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Imagen */
+.imagenCurso {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.imagenCurso img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Detalles */
+.detallesCurso {
+  flex: 1.5;
+}
+
+.detallesCurso h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #333;
+}
+
+.detallesCurso p {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cursoDetalleContainer {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .imagenCurso img {
+    max-width: 100%;
+  }
+}

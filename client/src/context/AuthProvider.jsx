@@ -73,6 +73,7 @@ export const AuthProvider = ({ children }) => {
           id: decoded.id,
           nombre: decoded.username,
           rol: decoded.rol,
+          imagen: decoded.imagen,
         };
         setUser(userData);
       } catch (error) {

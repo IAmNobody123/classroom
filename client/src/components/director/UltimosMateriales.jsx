@@ -23,6 +23,7 @@ export default function UltimosMateriales({ refresh, idDocente }) {
           titulo={mat.titulo}
           fecha={mat.subido ? mat.subido.substring(0, 10) : ""}
           curso={mat.nombre}
+          urlVideo={mat.linkVideo}
         />
       ))}
     </div>

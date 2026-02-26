@@ -16,6 +16,8 @@ export default function CardCursos({
   const [errorNotifiacion, setErrorNotifiacion] = useState("");
   const [nombreMaterial, setNombreMaterial] = useState("");
   const [material, setMaterial] = useState(null);
+  const [urlVideo, setUrlVideo] = useState("");
+  // const [urlJuego, setUrlJuego] = useState("");
 
   const validateForm = () => {
     if (!nombreMaterial || !material) {
@@ -32,6 +34,8 @@ export default function CardCursos({
     const formData = new FormData();
     formData.append("nombre", nombreMaterial);
     formData.append("archivo", material);
+    formData.append("urlVideo", urlVideo);//agregados
+    // formData.append("urlJuego", urlJuego);
     formData.append("curso", id);
     formData.append("gradoCurso", grado);
     formData.append("idDocente", idDocente);
@@ -98,7 +102,10 @@ export default function CardCursos({
           <p>{grado}</p>
         </div>
         <div className="botonCurso">
-          <button className="boton-add-material" onClick={() => setIsOpenAgregar(true)}>
+          <button
+            className="boton-add-material"
+            onClick={() => setIsOpenAgregar(true)}
+          >
             {button}
           </button>
         </div>
@@ -130,7 +137,22 @@ export default function CardCursos({
               onChange={(e) => setMaterial(e.target.files[0])}
             />
           </div>
-          <button className="boton-add-material" onClick={() => handleSubmit()}>Agregar</button>
+          <div className="form-class">
+            <label for="material">Ingresar URL de un video o juego(opcional):</label>
+            <input
+              required
+              type="text"
+              id="material"
+              name="material"
+              onChange={(e) => setUrlVideo(e.target.value)}
+            />
+          </div>
+          <button
+            className="boton-add-material"
+            onClick={() => handleSubmit()}
+          >
+            Agregar
+          </button>
         </div>
       </Modal>
     </div>

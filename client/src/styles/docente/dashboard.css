@@ -22,6 +22,7 @@
 }
 
 .docente-card {
+  border: 1px solid var(--blanco-calido);
   background-color: white;
   display: flex;
   gap: 2rem;
@@ -61,4 +62,12 @@
   padding: 10px 20px;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.TotalAlumnosDescargar{
+  cursor: pointer;
+}
+.TotalAlumnosDescargar:hover{
+  color: var(--guinda);
+  background-color: #f4f6f8;
+  border: 1px solid var(--guinda);
 }

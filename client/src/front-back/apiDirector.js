@@ -23,23 +23,20 @@ export const getListCursos = async () => {
   return response.json();
 };
 
-export const insertCurso = async (data) => {
+export const insertCurso = async (formData) => {
   const response = await fetch(`${API_URL}/insertCurso`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+    body: formData, // NO headers aquí
   });
+
   if (!response.ok) {
-    const text = await response.text();
-    console.error("Error de servidor:", text);
-    return { success: false, error: "Error en el servidor" };
+    return { success: false };
   }
 
   const result = await response.json();
   return { success: true, ...result };
 };
+
 export const getDataDashboard = async () => {
   const response = await fetch(`${API_URL}/getDataDashboard`);
   return response.json();

@@ -17,13 +17,14 @@ export default function GestionCursos() {
   const [nombreCurso, setNombreCurso] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [docente, setDocente] = useState("");
-  const [notification, setNotification] = useState("");
   const [grado, setGrado] = useState("");
+  const [imagen, setImagen] = useState(null);
 
   const dataDocentes = async () => {
     const res = await getListDocentes();
     setDocentes(res);
   };
+
   const dataCursos = async () => {
     const res = await getListCursos();
     setCursos(res);
@@ -31,28 +32,25 @@ export default function GestionCursos() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      nombre: nombreCurso,
-      descripcion: descripcion,
-      docente: docente,
-      grado: grado,
-    };
-    const response = await insertCurso(data);
+
+    const formData = new FormData();
+    formData.append("nombre", nombreCurso);
+    formData.append("descripcion", descripcion);
+    formData.append("docente", docente);
+    formData.append("grado", grado);
+    formData.append("image", imagen);
+
+    const response = await insertCurso(formData);
+
     if (response.success) {
       dataCursos();
-      setNombreCurso("");
-      setDescripcion("");
-      setDocente("");
-      setNotification("Curso creado exitosamente");
       setOpenModal(false);
       Swal.fire({
-        title: notification,
+        title: "Curso creado exitosamente",
         icon: "success",
         showConfirmButton: false,
         timer: 1500,
       });
-    } else {
-      setNotification(response.error);
     }
   };
 
@@ -126,6 +124,16 @@ export default function GestionCursos() {
                 <option value="6to grado">6to grado</option>
               </select>
             </div>
+            <div className="form-class">
+              <label htmlFor="imagen">Ingresa una imagen:</label>
+              <input
+                type="file"
+                id="imagen"
+                name="imagen"
+                accept="image/*"
+                onChange={(e) => setImagen(e.target.files[0])}
+              />
+            </div>
 
             <button type="submit">Agregar</button>
           </form>
@@ -138,6 +146,7 @@ export default function GestionCursos() {
               <h2>{curso.curso}</h2>
               <p>{curso.description}</p>
               <p>Grado: {curso.grado}</p>
+
               <button
                 className="buttonVerDetalles"
                 onClick={() => {
@@ -161,10 +170,29 @@ export default function GestionCursos() {
             }}
             title={"Detalles del Curso"}
           >
-            <p>Nombre: {cursoSeleccionado.nombre}</p>
-            <p>Descripción: {cursoSeleccionado.descripcion}</p>
-            <p>Docente: {cursoSeleccionado.docente}</p>
-            <p>Grado: {cursoSeleccionado.grado}</p>
+            <div className="cursoDetalleContainer">
+              <div className="imagenCurso">
+                <img
+                  src={cursoSeleccionado.imagenUrl}
+                  alt={cursoSeleccionado.curso}
+                />
+              </div>
+
+              <div className="detallesCurso">
+                <h2>{cursoSeleccionado.curso}</h2>
+                <p>
+                  <strong>Descripción:</strong>{" "}
+                  {cursoSeleccionado.descripcion}
+                </p>
+                <p>
+                  <strong>Docente:</strong>{" "}
+                  {cursoSeleccionado.docente}
+                </p>
+                <p>
+                  <strong>Grado:</strong> {cursoSeleccionado.grado}
+                </p>
+              </div>
+            </div>
           </Modal>
         )}
       </div>

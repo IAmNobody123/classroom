@@ -3,22 +3,71 @@ import { Link, useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import "../styles/general.css";
 import useAuth from "../context/useAuth";
+import {
+  FaTachometerAlt,
+  FaBook,
+  FaUpload,
+  FaQuestionCircle,
+  FaClipboardCheck,
+  FaCalendarAlt,
+  FaGamepad,
+  FaUsers,
+  FaFileAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
 const menuItems = {
   docente: [
-    { path: "/dashboardDocente", label: "Dashboard" },
-    { path: "/mis-cursos", label: "Mis Cursos" },
-    { path: "/subir-material", label: "Subir material" },
-    { path: "/formular-preguntas", label: "Formular Preguntas" },
-    { path: "/calificar-alumnos", label: "Calificar Alumnos" },
-    { path: "/plan-trabajo", label: "Plan de trabajo" },
-    { path: "/juegos", label: "Juegos disponibles" },
+
+    { path: "/mis-cursos", label: "Mis Cursos", icon: <FaBook /> },
+    {
+      path: "/subir-material",
+      label: "Subir material",
+      icon: <FaUpload />,
+    },
+    // {
+    //   path: "/formular-preguntas",
+    //   label: "Formular Preguntas",
+    //   icon: <FaQuestionCircle />,
+    // },
+    {
+      path: "/calificar-alumnos",
+      label: "Calificar Alumnos",
+      icon: <FaClipboardCheck />,
+    },
+    {
+      path: "/plan-trabajo",
+      label: "Semanario para el director",
+      icon: <FaCalendarAlt />,
+    },
+    {
+      path: "/juegos",
+      label: "Juegos disponibles",
+      icon: <FaGamepad />,
+    },
+        {
+      path: "/dashboardDocente",
+      label: "Dashboard",
+      icon: <FaTachometerAlt />,
+    },
   ],
   director: [
-    { path: "/dashboard", label: "Dashboard" },
-    { path: "/gestionUsuarios", label: "Gestión de Usuarios" },
-    { path: "/cursos", label: "Cursos" },
-    { path: "/planTrabajoVer", label: "Plan de trabajo" },
-    { path: "/reportes", label: "Reportes" },
+    {
+      path: "/dashboard",
+      label: "Dashboard",
+      icon: <FaTachometerAlt />,
+    },
+    {
+      path: "/gestionUsuarios",
+      label: "Gestión de Usuarios",
+      icon: <FaUsers />,
+    },
+    { path: "/cursos", label: "Cursos", icon: <FaBook /> },
+    {
+      path: "/planTrabajoVer",
+      label: "Plan de trabajo",
+      icon: <FaCalendarAlt />,
+    },
+    { path: "/reportes", label: "Reportes", icon: <FaFileAlt /> },
   ],
 };
 
@@ -29,7 +78,7 @@ export default function Sidebar({ role }) {
   return (
     <div className="sidebarBox">
       <div className="sidebarTitle">
-          <img src="/logo.png" alt="" />
+        <img src="/logo.png" alt="" />
       </div>
       <ul className="sidebarList">
         {items.map((item, idx) => (
@@ -40,7 +89,8 @@ export default function Sidebar({ role }) {
                 isActive ? "sidebarLink active" : "sidebarLink"
               }
             >
-              {item.label}
+              <span className="icon">{item.icon}</span>
+              <span>{item.label}</span>
             </NavLink>
           </li>
         ))}

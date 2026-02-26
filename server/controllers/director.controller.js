@@ -13,24 +13,47 @@ const getListDocentes = async (req, res) => {
 };
 
 const getListCursos = async (req, res) => {
+  const BACKEND_URL =
+    process.env.BACKEND_URL || "http://localhost:5000";
   try {
     const result =
-      await pool.query(`select c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado 
+      await pool.query(`select c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado, c.imagen 
       from clases c inner join docentes d on c.docente_id = d.id`);
-    res.status(200).json(result.rows);
+    const resultImage = result.rows.map((curso) => ({
+      ...curso,
+      imagenUrl: `${BACKEND_URL}/uploads/img/cursos/${curso.imagen}`,
+    }));
+    res.status(200).json(resultImage);
   } catch (error) {
     console.error("Error en la consulta:", error);
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
 
+// const insertCurso = async (req, res) => {
+//   const { nombre, descripcion, docente, grado } = req.body;
+//   try {
+//     const result = await pool.query(
+//       "INSERT INTO clases (nombre, descripcion, docente_id, grado) VALUES ($1, $2, $3,$4) RETURNING *",
+//       [nombre, descripcion, docente, grado],
+//     );
+//     res.status(200).json(result.rows[0]);
+//   } catch (error) {
+//     console.error("Error en la consulta:", error);
+//     res.status(500).json({ error: "Error en el servidor" });
+//   }
+// };
+
 const insertCurso = async (req, res) => {
   const { nombre, descripcion, docente, grado } = req.body;
+  const imagen = req.file ? req.file.filename : null;
+
   try {
     const result = await pool.query(
-      "INSERT INTO clases (nombre, descripcion, docente_id, grado) VALUES ($1, $2, $3,$4) RETURNING *",
-      [nombre, descripcion, docente, grado],
+      "INSERT INTO clases (nombre, descripcion, docente_id, grado, imagen) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [nombre, descripcion, docente, grado, imagen],
     );
+
     res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error("Error en la consulta:", error);
@@ -67,6 +90,7 @@ const dataDashboard = async (req, res) => {
     res.status(500).json({ error: "Error en el servidor" });
   }
 };
+
 const listAllPlanesTrabajo = async (req, res) => {
   try {
     const result = await pool.query(

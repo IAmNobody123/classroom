@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import { getListCursosDocente } from "../../front-back/apiDocenteCursos";
 
-export default function CursoCarousel( {setIdCurso} ) {
+export default function CursoCarousel({ setIdCurso }) {
   const user = localStorage.getItem("user");
   const id = JSON.parse(user).id;
   const [misCursos, setMisCursos] = useState([]);
-  
-    const [startIndex, setStartIndex] = useState(0);
-    const itemsPerPage = 1;
-    const endIndex = startIndex + itemsPerPage;
 
+  const [startIndex, setStartIndex] = useState(0);
+  const itemsPerPage = 1;
+  const endIndex = startIndex + itemsPerPage;
 
   const dataCursos = async (id) => {
-      const res = await getListCursosDocente(id);
-      console.log(res);
-      setMisCursos(res);
+    const res = await getListCursosDocente(id);
+    console.log(res);
+    setMisCursos(res);
   };
 
   useEffect(() => {
@@ -23,7 +22,6 @@ export default function CursoCarousel( {setIdCurso} ) {
 
   const handleClickId = (id) => {
     setIdCurso(id);
-    console.log(id);
   };
 
   const handleNext = () => {
@@ -39,6 +37,10 @@ export default function CursoCarousel( {setIdCurso} ) {
   };
 
   const visibleCursos = misCursos.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setStartIndex(0);
+  }, [misCursos]);
 
   return (
     <div className="seleccionarCurso">
@@ -56,10 +58,14 @@ export default function CursoCarousel( {setIdCurso} ) {
           <div className="curso-card" key={curso.id}>
             <h3>{curso.nombre}</h3>
             <p>{curso.grado}</p>
-            <button className="btn-ver" onClick={() => handleClickId(curso.id)}>Ver material</button>
+            <button
+              className="btn-ver"
+              onClick={() => handleClickId(curso.id)}
+            >
+              Ver material
+            </button>
           </div>
         ))}
-
 
         <button
           className="nav-button"

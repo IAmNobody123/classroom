@@ -11,7 +11,7 @@ const LoginRedirect = () => {
       case 'director':
         return <Navigate to="/dashboard" replace />;
       case 'docente':
-        return <Navigate to="/dashboardDocente" replace />;
+        return <Navigate to="/mis-cursos" replace />;
       case 'estudiante':
         return <Navigate to="/home" replace />;
       default:

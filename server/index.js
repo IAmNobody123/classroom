@@ -23,6 +23,7 @@ app.use('/uploads/img/perfil', express.static(path.join(__dirname, 'uploads/img/
 app.use('/uploads/img/alumnosCursos', express.static(path.join(__dirname, 'uploads/img/alumnosCursos')));
 app.use('/uploads/docs', express.static(path.join(__dirname, 'uploads/docs')));
 app.use('/uploads/docs/temp', express.static(path.join(__dirname, 'uploads/docs/temp')));
+app.use('/uploads/img/cursos', express.static(path.join(__dirname, 'uploads/img/cursos')));
 app.use('/api', authRoutes);
 
 // Ruta base

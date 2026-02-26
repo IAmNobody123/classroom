@@ -95,6 +95,20 @@ export const submitExamen = async (data) => {
   return response.json();
 };
 
+export const getAllMaterialesPendientes = async (id) => {
+  const response = await fetch(
+    `${API_URL}/getAllMaterialesPendientes/${id}`,
+  );
+  return response.json();
+}
+
+export const updateEstadoMaterial = async (id) => {
+  const response = await fetch(`${API_URL}/updateEstadoMaterial/${id}`, {
+    method: "PUT",
+  });
+  return response.json();
+};
+
 export const getMaterialesPendientes = async (id) => {
   const response = await fetch(
     `${API_URL}/getMaterialesPendientes/${id}`,
@@ -104,6 +118,27 @@ export const getMaterialesPendientes = async (id) => {
 
 export const getAlumnosSinNota = async (data) => {
   const response = await fetch(`${API_URL}/getAlumnosSinNota`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+export const getAlumnosConParticipaciones = async (documentoId, cursoId) => {
+  const response = await fetch(`${API_URL}/getParticipaciones/${documentoId}/${cursoId}`);
+  return response.json();
+}
+export const finalizarRevision = async (id) => {
+  const response = await fetch(`${API_URL}/updateEstadoMaterial/${id}`, {
+    method: "POST",
+  });
+  return response.json();
+}
+
+export const sumarParticipacion = async (data) => {
+  const response = await fetch(`${API_URL}/insertParticipaciones`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -12,16 +12,18 @@ import "../../styles/docente/dashboard.css";
 import { getDashboardStats } from "../../front-back/apiDocenteCursos";
 import {
   FaUserGraduate,
-  FaCalendarTimes ,
+  FaCalendarTimes,
   FaSchool,
 } from "react-icons/fa";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const DashboardDocente = () => {
@@ -33,18 +35,45 @@ const DashboardDocente = () => {
 
   const [asistenciaData, setAsistenciaData] = useState({
     labels: [],
-    datasets: []
+    datasets: [],
   });
 
   const [notasData, setNotasData] = useState({
     labels: [],
-    datasets: []
+    datasets: [],
   });
 
   const [alumnosClase, setAlumnosClase] = useState({
     labels: [],
-    datasets: []
+    datasets: [],
   });
+  const [alumnosCurso, setAlumnosCurso] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+
+  const generarPDF = () => {
+    const doc = new jsPDF();
+
+    doc.text("Reporte de Asistencia", 14, 15);
+
+    const tableColumn = ["Nombre", "Apellido", "Grado","Curso","Discapacidad"];
+    const tableRows = [];
+
+    alumnosCurso.forEach((fila) => {
+
+      tableRows.push([fila.nombre, fila.apellido,fila.grado,fila.curso, fila.discapacidad]);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("reporte.pdf");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,15 +86,15 @@ const DashboardDocente = () => {
         setDatos({
           cursos: stats.cursos,
           alumnos: stats.alumnos,
-          clasesHoy: stats.clasesHoy
+          clasesHoy: stats.clasesHoy,
         });
 
         setAsistenciaData({
-          labels: stats.asistencia.map(a => a.nombre),
+          labels: stats.asistencia.map((a) => a.nombre),
           datasets: [
             {
               label: "Asistencia promedio (%)",
-              data: stats.asistencia.map(a => a.promedio),
+              data: stats.asistencia.map((a) => a.promedio),
               backgroundColor: "#4a90e2",
               borderRadius: 5,
             },
@@ -73,28 +102,29 @@ const DashboardDocente = () => {
         });
 
         setNotasData({
-          labels: stats.notas.map(n => n.nombre),
+          labels: stats.notas.map((n) => n.nombre),
           datasets: [
             {
               label: "Promedio de notas",
-              data: stats.notas.map(n => n.promedio),
+              data: stats.notas.map((n) => n.promedio),
               backgroundColor: "#f39c12",
               borderRadius: 5,
             },
           ],
         });
         setAlumnosClase({
-          labels: stats.alumnosCount.map(a => a.nombre),
+          labels: stats.alumnosCount.map((a) => a.nombre),
           datasets: [
             {
               label: "Alumnos por curso",
-              data: stats.alumnosCount.map(a => a.alumnos),
+              data: stats.alumnosCount.map((a) => a.alumnos),
               backgroundColor: "#4a90e2",
               borderRadius: 5,
             },
-          ]
+          ],
         });
 
+        setAlumnosCurso(stats.alumnosData);
       } catch (error) {
         console.error("Error cargando dashboard:", error);
       }
@@ -103,25 +133,37 @@ const DashboardDocente = () => {
     fetchData();
   }, []);
 
+
+
   return (
     <div className="dashboard-docente">
       <h1>Panel del Docente </h1>
       <div className="docente-cards">
         <div className="docente-card">
-          <div><FaSchool /></div>
+          <div>
+            <FaSchool />
+          </div>
           <h3>Cursos asignados</h3>
           <p>{datos.cursos}</p>
         </div>
-        <div className="docente-card">
-          <div> <FaUserGraduate /></div>
+        <div
+          className="docente-card TotalAlumnosDescargar"
+          onClick={() => generarPDF()}
+        >
+          <div >
+            {" "}
+            <FaUserGraduate />
+          </div>
           <h3>Total de alumnos</h3>
           <p>{datos.alumnos}</p>
         </div>
-        <div className="docente-card">
-          <div><FaCalendarTimes /></div>
+        {/* <div className="docente-card">
+          <div>
+            <FaCalendarTimes />
+          </div>
           <h3>Clases hoy</h3>
           <p>{datos.clasesHoy}</p>
-        </div>
+        </div> */}
       </div>
 
       <div className="graficos">

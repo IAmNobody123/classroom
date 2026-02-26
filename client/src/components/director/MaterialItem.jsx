@@ -8,6 +8,7 @@ export default function MaterialItem({
   fecha,
   curso,
   id,
+  urlVideo,
 }) {
   const [showModal, setShowModal] = useState(false);
   const [material, setMaterial] = useState(null);
@@ -30,6 +31,11 @@ export default function MaterialItem({
       }
     } else {
       setShowModal(false);
+    }
+  };
+  const handleMaterial = () => {
+    if (urlVideo) {
+      window.open(urlVideo, "_blank");
     }
   };
 
@@ -55,6 +61,7 @@ export default function MaterialItem({
       </div>
       <div className="material-button">
         <button onClick={handleModal}>Ver material</button>
+        <button onClick={handleMaterial}>Ver apartado</button>
       </div>
       <Modal isOpen={showModal} onClose={handleModal} title={titulo}>
         {loading ? (

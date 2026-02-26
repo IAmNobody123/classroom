@@ -8,6 +8,7 @@ import Toast from "../components/Toast";
 const images = ["/img3.webp", "/img2.webp", "/fondoLogin.jpg"];
 
 export default function Login() {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -17,23 +18,37 @@ export default function Login() {
 
   const [currentImage, setCurrentImage] = useState(0);
 
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    switch (user.rol) {
-      case "director":
-        navigate("/dashboard", { replace: true });
-        break;
-      case "docente":
-        navigate("/dashboardDocente", { replace: true });
-        break;
-      default:
-        break;
-    }
-  }
-}, [navigate]);
+  // useEffect(() => {
+  //   const storedUser = localStorage.getItem("user");
+  //   if (storedUser) {
+  //     const user = JSON.parse(storedUser);
+  //     switch (user.rol) {
+  //       case "director":
+  //         navigate("/dashboard", { replace: true });
+  //         break;
+  //       case "docente":
+  //         navigate("/mis-cursos", { replace: true });
+  //         break;
+  //       default:
+  //         break;
+  //     }
+  //   }
+  // }, [navigate]);
 
+  useEffect(() => {
+    if (user) {
+      switch (user.rol) {
+        case "director":
+          navigate("/dashboard", { replace: true });
+          break;
+        case "docente":
+          navigate("/mis-cursos", { replace: true });
+          break;
+        default:
+          break;
+      }
+    }
+  }, [user, navigate]);
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) {
@@ -43,16 +58,29 @@ useEffect(() => {
 
     const res = await login(username, password);
 
-    if (res.success) {
-      const user = localStorage.getItem("user");
-      const user2 = JSON.parse(user).rol;
+    // if (res.success) {
+    //   const user = localStorage.getItem("user");
+    //   const user2 = JSON.parse(user).rol;
 
-      switch (user2) {
+    //   switch (user2) {
+    //     case "director":
+    //       navigate("/dashboard", { replace: true });
+    //       break;
+    //     case "docente":
+    //       navigate("/mis-cursos", { replace: true });
+    //       break;
+    //     default:
+    //       navigate("/", { replace: true });
+    //       break;
+    //   }
+    // }
+    if (res.success) {
+      switch (res.user.rol) {
         case "director":
           navigate("/dashboard", { replace: true });
           break;
         case "docente":
-          navigate("/dashboardDocente", { replace: true });
+          navigate("/mis-cursos", { replace: true });
           break;
         default:
           navigate("/", { replace: true });

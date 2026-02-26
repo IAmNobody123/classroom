@@ -44,6 +44,10 @@ const {
   getAsistenciaFecha,
   getDashboardStats,
   getMaterialById,
+  getAllMaterialesPendientes,
+  updateEstadoMaterial,
+  getParticipaciones,
+  insertParticipaciones,
 } = require("../controllers/docente.controller");
 
 // imagenes de docentes
@@ -119,8 +123,34 @@ const storagePlanTrabajo = multer.diskStorage({
 
 const uploadPlan = multer({ storage: storagePlanTrabajo });
 
+const storageImageCurso = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const dir = "uploads/img/cursos";
+
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    cb(null, dir);
+  },
+
+  filename: (req, file, cb) => {
+    const timestamp = Date.now();
+    const ext = path.extname(file.originalname);
+
+    const sanitizedName = file.originalname
+      .replace(ext, "")
+      .trim()
+      .replace(/\s+/g, "_");
+
+    cb(null, `${sanitizedName}_${timestamp}${ext}`);
+  },
+});
+
+const cursosUpload = multer({ storage: storageImageCurso });
+
 router.post("/login", login);
-router.post("/register", register);
+router.post("/register",upload.single("image") ,register);
 router.get("/validateToken", validateToken);
 
 router.post("/registerUsers", upload.single("image"), registerUsers);
@@ -129,7 +159,7 @@ router.get("/listUsers", listUsers);
 // director
 router.get("/listDocentes", getListDocentes);
 router.get("/listCursos", getListCursos);
-router.post("/insertCurso", insertCurso);
+router.post("/insertCurso", cursosUpload.single("image"), insertCurso);
 router.put("/desactivarUser/:id", desactivarUser);
 router.post("/getReportes", getReportes);
 
@@ -153,6 +183,10 @@ router.get("/listCursosAlumno/:id", listCursosAlumno);
 router.post("/submitExamen", submitExamen);
 router.get("/getMaterialesPendientes/:id", getMaterialesPendientes);
 router.post("/getAlumnosSinNota", getAlumnosSinNota);
+router.get("/getAllMaterialesPendientes/:id", getAllMaterialesPendientes);
+router.post("/updateEstadoMaterial/:id", updateEstadoMaterial);
+router.get("/getParticipaciones/:docId/:cursoId", getParticipaciones);
+router.post("/insertParticipaciones", insertParticipaciones);
 
 // Planes de Trabajo
 router.post("/uploadPlanTrabajo", uploadMaterial.single("archivo"), uploadPlanTrabajo);

@@ -102,7 +102,9 @@
 }
 
 .material-button {
+  display: flex;
   flex-shrink: 0;
+  gap: 2rem;
 }
 
 .material-button button {
@@ -151,4 +153,61 @@
   to {
     transform: rotate(360deg);
   }
+}
+/*  */
+
+.containerSubirMaterial {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: 0px auto;
+  padding: 15px 10px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.form-class {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-class label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: black;
+}
+
+.form-class input[type="text"],
+.form-class input[type="file"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  color: black;
+}
+
+.form-class input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.3);
+}
+
+.boton-add-material {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #6c63ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.boton-add-material:hover {
+  background: #574fd6;
 }
