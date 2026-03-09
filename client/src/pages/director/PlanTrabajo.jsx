@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { listAllPlanesTrabajo } from "../../front-back/apiDirector";
 import mammoth from "mammoth";
 import Modal from "../../components/Modal";
-import "../../styles/docente/PlanTrabajo.css";
+import "../../styles/docente/planTrabajo.css";
 
 
 export default function PlanTrabajoVer() {
