@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useAuth from "../../context/useAuth";
 import Modal from "../../components/Modal";
 import { materialPorCurso, getFormularioByDocumento, submitExamen } from "../../front-back/apiDocenteCursos";

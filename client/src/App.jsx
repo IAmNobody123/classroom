@@ -15,7 +15,7 @@ import Reportes from "./pages/director/Reportes";
 import LoginRedirect from "./components/LoginRedirect";
 import MisCursos from "./pages/docent/MisCursos";
 import PlanTrabajo from "./pages/docent/PlanTrabajo";
-import Juegos from "./pages/docent/juegos";
+import Juegos from "./pages/docent/Juegos";
 import GestionCursos from "./pages/director/GestionCursos";
 import FormularPreguntas from "./pages/docent/FormularPreguntas";
 import SubirMaterial from "./pages/docent/SubirMaterial";
