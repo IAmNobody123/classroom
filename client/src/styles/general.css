@@ -6,6 +6,7 @@
   margin: 0;
   padding: 0;
 }
+
 .sidebarBox {
   display: flex;
   flex-direction: column;
@@ -23,6 +24,7 @@
   margin-bottom: 1.5rem;
   margin-top: 20px;
 }
+
 .sidebarTitle img {
   width: 100px;
   height: 100px;
@@ -33,6 +35,7 @@
   padding: 0;
   margin: 0;
 }
+
 .sidebarLink {
   display: flex;
   align-items: center;
@@ -41,6 +44,7 @@
   text-decoration: none;
   color: #333;
 }
+
 .sidebarLink {
   display: block;
   padding: 0.5rem;
@@ -49,6 +53,7 @@
   transition: background-color 0.3s;
   gap: 20px;
 }
+
 .sidebarLink:hover {
   background-color: #4a5568;
 }
@@ -65,7 +70,8 @@
   gap: 1rem;
   padding-left: 1.2rem;
 }
-.icon{
+
+.icon {
   font-size: 1.2rem;
 }
 
@@ -129,14 +135,17 @@
   font-size: 15px;
   cursor: pointer;
 }
+
 .modal-close:hover {
   background: white;
   color: red;
   border: 1px solid red;
 }
+
 .modal-body {
   margin-top: 1rem;
 }
+
 /*  */
 
 .sidebarBox {
@@ -158,13 +167,14 @@
 }
 
 .sidebarLink:hover {
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(255, 255, 255, 0.15);
 }
 
 .sidebarLink.active {
   background-color: var(--blanco-calido);
   color: var(--guinda);
 }
+
 .boxMain {
   margin-left: 20%;
   flex: 1;
@@ -174,7 +184,7 @@
   padding-left: 4%;
 }
 
-.cerrarSesion{
+.cerrarSesion {
   display: flex;
   border: 1px solid #fff;
   color: var(--blanco-calido);
@@ -182,13 +192,15 @@
   font-weight: bold;
 
 }
-.cerrarSesion:hover{
+
+.cerrarSesion:hover {
   background-color: var(--gris-medio);
   color: var(--guinda);
   font-weight: bold;
   border-color: var(--guinda-hover);
 }
-.sidebarFooter{
+
+.sidebarFooter {
   display: flex;
   flex-direction: row;
   margin-top: auto;
@@ -198,10 +210,15 @@
 
 /* header */
 .topHeader {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 100%;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  background: transparent;
+  padding: 10px 20px;
 }
 
 .headerRight {
@@ -212,12 +229,12 @@
 
 
 .userAvatar {
-  width:3rem;
+  width: 3rem;
   height: 3rem;
   border-radius: 50%;
   object-fit: cover;
   cursor: pointer;
-  border: 2px solid #e0e0e0;
+  border: 2px solid;
   transition: 0.2s ease;
 }
 

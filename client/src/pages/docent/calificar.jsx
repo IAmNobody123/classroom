@@ -7,8 +7,8 @@ import {
   submitExamen,
 } from "../../front-back/apiDocenteCursos";
 import Modal from "../../components/Modal";
-import "../../styles/docente/formularPreguntas.css"; // Reuse existing styles
 import Swal from "sweetalert2";
+import "../../styles/docente/formularPreguntas.css";
 
 export default function Calificar() {
   const [idCurso, setIdCurso] = useState("");
@@ -18,9 +18,9 @@ export default function Calificar() {
   // Modal & Selection State
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [activeModal, setActiveModal] = useState(null); 
+  const [activeModal, setActiveModal] = useState(null);
   const [formulario, setFormulario] = useState(null);
-  const [respuestas, setRespuestas] = useState({}); 
+  const [respuestas, setRespuestas] = useState({});
 
   useEffect(() => {
     if (idCurso) {
@@ -40,8 +40,6 @@ export default function Calificar() {
   const handleOpenStudentList = async (material) => {
     setSelectedMaterial(material);
     try {
-      // Updated to fetch ONLY students without grades for this form
-      // 'material' object from getMaterialesPendientes includes 'formulario_id'
       if (!material.formulario_id) {
         alert(
           "Error: Material sin formulario ID (backend logic info missing)",

@@ -93,9 +93,9 @@ export default function CalificarAlumnos() {
       Swal.fire("Error", "No se pudo finalizar la revisión", "error");
     }
   };
-  
+
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="calificar-alumnos-page" style={{ padding: "20px" }}>
       <h1>Calificar Participaciones</h1>
 
       <CursoCarousel setIdCurso={setIdCurso} />

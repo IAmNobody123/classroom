@@ -1,6 +1,23 @@
 .formular-preguntas-page {
   padding: 20px;
   font-family: Arial, sans-serif;
+  background-image: url("../../assets/bg-docente.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.calificar-alumnos-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-image: url("../../assets/bg-docente.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .title {
@@ -25,6 +42,7 @@
   float: right;
   cursor: pointer;
 }
+
 /*  */
 
 .carousel-box {
@@ -35,12 +53,18 @@
   padding: 20px;
   border-radius: 1.1rem;
 }
+
 .seleccionarCurso {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
   gap: 1rem;
+}
+
+.seleccionarCurso p {
+  color: #000;
+  font-size: 1.2rem;
 }
 
 .curso-card {
@@ -64,6 +88,7 @@
   cursor: pointer;
   margin: 0 auto;
 }
+
 /*  */
 .lista-materiales {
   width: 450px;
@@ -88,6 +113,7 @@
   padding: 8px 14px;
   cursor: pointer;
 }
+
 /*  */
 .formulario-pregunta-container {
   display: flex;
@@ -182,7 +208,7 @@
   background-color: #d9363e;
 }
 
-.formulario-left > button {
+.formulario-left>button {
   margin-top: 8px;
   background-color: #1890ff;
   color: white;
@@ -192,7 +218,7 @@
   cursor: pointer;
 }
 
-.formulario-left > button:hover {
+.formulario-left>button:hover {
   background-color: #1677cc;
 }
 
@@ -217,7 +243,7 @@
 }
 
 /* Botón eliminar pregunta */
-.formulario-pregunta-container > button {
+.formulario-pregunta-container>button {
   grid-column: 1 / -1;
   justify-self: flex-end;
   margin-top: 16px;
@@ -229,6 +255,6 @@
   cursor: pointer;
 }
 
-.formulario-pregunta-container > button:hover {
+.formulario-pregunta-container>button:hover {
   background-color: #d94a45;
 }

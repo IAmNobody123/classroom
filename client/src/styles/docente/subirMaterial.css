@@ -1,42 +1,56 @@
-.cardCurso{
-    display: flex;
-    flex-direction: column;
-    width: 200px;
-    height: 250px;
-    border: 1px solid black;
-    background-color: aliceblue;
-    border-radius: 10px;
-    margin: 10px;
-    justify-content: center;
+.BoxSubirMaterial {
+  background-image: url("../../assets/bg-docente.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  padding-bottom: 2rem;
 }
-.tituloCurso{
-    font-weight: bold;
-    margin-bottom: 2rem;
-    text-align: center;
+
+.cardCurso {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: 250px;
+  border: 1px solid black;
+  background-color: aliceblue;
+  border-radius: 10px;
+  margin: 10px;
+  justify-content: center;
 }
-.gradoCurso{
-    margin-bottom: 2rem;
-    text-align: center;
+
+.tituloCurso {
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
 }
-.botonCurso{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.gradoCurso {
+  margin-bottom: 2rem;
+  text-align: center;
 }
-.vistaCursos{
-    display: flex;
-    justify-content: center;
-    width:100%;
-    gap: 1rem;
-    border-radius: 0.5rem;
-    margin: 1rem;
-    background-color: #cacaca;
+
+.botonCurso {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.vistaCursos {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
+  border-radius: 0.5rem;
+  margin: 1rem;
+  background-color: #cacaca;
+}
+
 /*  */
 .carrusel-container {
   display: flex;
   align-items: center;
-  background-color: var(--rojo-bg);
   padding: 20px;
   border-radius: 10px;
   justify-content: center;
@@ -50,14 +64,17 @@
   border: none;
   cursor: pointer;
   user-select: none;
+  color: #000;
 }
 
 .nav-button:disabled {
   opacity: 0.5;
   cursor: default;
+  color: #555;
 }
 
 .cursos-wrapper {
+  background: transparent;
   display: flex;
   gap: 50px;
 }
@@ -117,7 +134,7 @@
   font-weight: bold;
 }
 
-.boton-add-material{
+.boton-add-material {
   margin-top: 10px;
   background-color: #00d1d1;
   color: white;
@@ -127,7 +144,8 @@
   cursor: pointer;
   font-weight: bold;
 }
-.boton-add-material:hover{
+
+.boton-add-material:hover {
   background-color: #00b3b3;
 }
 
@@ -154,6 +172,7 @@
     transform: rotate(360deg);
   }
 }
+
 /*  */
 
 .containerSubirMaterial {

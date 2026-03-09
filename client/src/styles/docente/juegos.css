@@ -2,6 +2,12 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   text-align: center;
+  background-image: url("../../assets/bg-docente.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .titulo {

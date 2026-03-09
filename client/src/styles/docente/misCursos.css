@@ -3,6 +3,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-image: url("../../assets/bg-docente.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 .misCursos > h2 {
   text-align: center;
