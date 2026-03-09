@@ -3,7 +3,7 @@ import "../../styles/docente/juegos.css";
 import Toast from "../../components/Toast";
 
 export default function Juegos() {
-  const [filtro, setFiltro] = useState("TODOS");
+  const [filtro, ] = useState("TODOS");
 
   const juegos = [
     {
