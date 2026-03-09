@@ -1,6 +1,6 @@
 import CursoCarousel from "../../components/docente/CursoCarousel";
 import ListaMateriales from "../../components/docente/ListaMateriales";
-import FormularioPreguntas from "../../components/docente/FormularioPreguntas";
+// import FormularioPreguntas from "../../components/docente/FormularioPreguntas";
 import { useState } from "react";
 import "../../styles/docente/formularPreguntas.css";
 

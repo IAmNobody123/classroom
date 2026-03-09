@@ -6,7 +6,7 @@ import {
   listPlanesTrabajo,
 } from "../../front-back/apiDocenteCursos";
 import Modal from "../../components/Modal";
-import "../../styles/docente/PlanTrabajo.css";
+import "../../styles/docente/planTrabajo.css";
 import mammoth from "mammoth";
 import Toast from "../../components/Toast";
 
