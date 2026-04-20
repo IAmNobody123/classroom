@@ -14,16 +14,18 @@ import ModalAsistencia from "../../components/docente/ModalAsistencia";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import useAuth from "../../context/useAuth";
+import TablaAlumnos from "../../components/docente/TablaAlumnos";
 
 export default function MisCursos() {
   const [misCursos, setMisCursos] = useState([]);
   const [idCurso, setIdCurso] = useState("");
-  const [discapacidad, setDiscapacidad] = useState("");
+  const [discapacidad, setDiscapacidad] = useState("TDAH");
   const [nombreAlumno, setNombreAlumno] = useState("");
   const [apellidoAlumno, setApellidoAlumno] = useState("");
   const [isOpenAgregar, setIsOpenAgregar] = useState(false);
   const [isOpenAsistencia, setIsOpenAsistencia] = useState(false);
   const [isOpenDetalles, setIsOpenDetalles] = useState(false);
+  const [isOpenAdminAlumnos, setIsOpenAdminAlumnos] = useState(false);
   const [notification, setNotification] = useState("");
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
@@ -153,8 +155,15 @@ export default function MisCursos() {
     }
   };
 
+  const handleAdminAlumnos = async (id) => {
+    const response = await listAlumnosCursos(id);
+    setAlumnos(response);
+    setIdCurso(id);
+    setIsOpenAdminAlumnos(true);
+  };
+
   useEffect(() => {
-    if(id) {
+    if (id) {
       dataCursos(id);
     }
   }, [id]);
@@ -190,9 +199,12 @@ export default function MisCursos() {
       <div className="containerCursosDocente">
         {misCursos.map((curso) => (
           <div className="cursoCard" key={curso.id}>
-            <h2>{curso.nombre}</h2>
-            <p>{curso.descripcion}</p>
-            <br />
+            <div className="informacionCurso">
+              <h2>{curso.nombre}</h2>
+              <p>{curso.descripcion}</p>
+              <img src={curso.imagenUrl} alt="" />
+            </div>
+
             <div className="botonesCurso">
               <button onClick={() => handleAgregarAlumno(curso.id)}>
                 Agregar alumnos
@@ -206,6 +218,9 @@ export default function MisCursos() {
               </button>
               <button onClick={() => handleVerDetalles(curso.id)}>
                 Ver Historial Asistencia
+              </button>
+              <button onClick={() => handleAdminAlumnos(curso.id)}>
+                Administrar Alumnos
               </button>
             </div>
           </div>
@@ -241,7 +256,7 @@ export default function MisCursos() {
                 onChange={(e) => setApellidoAlumno(e.target.value)}
               />
             </div>
-            <div className="form-class">
+            {/* <div className="form-class">
               <label htmlFor="discapacidad">
                 Seleccione la discapacidad:
               </label>
@@ -255,7 +270,7 @@ export default function MisCursos() {
                 <option value="TDAH">TDAH</option>
                 <option value="Trisomia 21">Trisomia 21</option>
               </select>
-            </div>
+            </div> */}
           </div>
           <div className="imagenEstudiante">
             <label htmlFor="imagen">Selecciona una imagen:</label>
@@ -365,6 +380,26 @@ export default function MisCursos() {
               </p>
             )}
           </div>
+        </div>
+      </Modal>
+
+      {/* modal administrar alumnos */}
+      <Modal
+        isOpen={isOpenAdminAlumnos}
+        onClose={() => {
+          setIsOpenAdminAlumnos(false);
+        }}
+        title="Administracion de alumnos"
+      >
+        <div
+          className="containerDetallesCurso"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <TablaAlumnos alumnos={alumnos} setAlumnos={setAlumnos} />
         </div>
       </Modal>
     </div>

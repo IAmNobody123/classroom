@@ -14,6 +14,7 @@ import {
   FaUsers,
   FaFileAlt,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
 const menuItems = {
   docente: [
@@ -41,10 +42,10 @@ const menuItems = {
     },
     {
       path: "/juegos",
-      label: "Juegos disponibles",
-      icon: <FaGamepad />,
+      label: "Generar Reportes",
+      icon: <FaFileAlt />,
     },
-        {
+    {
       path: "/dashboardDocente",
       label: "Dashboard",
       icon: <FaTachometerAlt />,
@@ -68,6 +69,7 @@ const menuItems = {
       icon: <FaCalendarAlt />,
     },
     { path: "/reportes", label: "Reportes", icon: <FaFileAlt /> },
+    { path: "/perfil-director", label: "Perfil", icon: <FaUser /> },
   ],
 };
 

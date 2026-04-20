@@ -11,8 +11,10 @@ import { AuthProvider } from "./context/AuthProvider";
 import DashboardDocent from "./pages/docent/DashboardDocent";
 import Layout from "./components/Layout";
 import GestionUsuarios from "./pages/director/GestionUsuarios";
+import PerfilDirector from "./pages/director/PerfilDirector";
 import Reportes from "./pages/director/Reportes";
 import LoginRedirect from "./components/LoginRedirect";
+import Registro from "./pages/Registro";
 import MisCursos from "./pages/docent/MisCursos";
 import PlanTrabajo from "./pages/docent/PlanTrabajo";
 import Juegos from "./pages/docent/Juegos";
@@ -31,6 +33,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginRedirect />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
 
           <Route
             element={
@@ -40,6 +43,7 @@ function App() {
             }
           >
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/perfil-director" element={<PerfilDirector />} />
             <Route
               path="/gestionUsuarios"
               element={<GestionUsuarios />}

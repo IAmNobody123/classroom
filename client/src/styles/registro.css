@@ -1,0 +1,173 @@
+.boxRegistro {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-color: #f3f4f6;
+  /* Fallback */
+  font-family: inherit;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.registroContent {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 40px 80px;
+  animation: fadeIn 0.6s ease-out;
+  display: flex;
+  flex-direction: column;
+  margin: auto 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.registroContent h3 {
+  text-align: center;
+  color: #1e293b;
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.formGroup label {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 2px 16px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background-color: rgba(255, 255, 255, 0.9);
+  font-size: 1rem;
+  color: #0f172a;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  background-color: #fff;
+}
+
+.formGroup input[type="file"] {
+  padding: 8px;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.formGroup input[type="file"]::file-selector-button {
+  background-color: #e2e8f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-right: 15px;
+}
+
+.formGroup input[type="file"]::file-selector-button:hover {
+  background-color: #cbd5e1;
+}
+
+.registroActions {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.btnSubmit {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+}
+
+.btnSubmit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btnSubmit:active {
+  transform: translateY(0);
+}
+
+.btnBack {
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #000;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btnBack:hover {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+@media (max-width: 640px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formGroup.full-width {
+    grid-column: span 1;
+  }
+
+  .registroActions {
+    grid-column: span 1;
+  }
+}

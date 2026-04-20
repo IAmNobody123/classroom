@@ -29,7 +29,6 @@ ChartJS.register(
 const Dashboard = () => {
   const { id } = JSON.parse(localStorage.getItem("user"));
   const [data, setData] = useState([]);
-  console.log("ID", id);
 
   // const stats = {
   //   alumnos: 150,
@@ -65,12 +64,12 @@ const Dashboard = () => {
   };
 
   const chartData = {
-    labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun"],
+    labels: ["Alumnos", "Docentes", "Clases", "Planes de Trabajo"],
     datasets: [
       {
-        label: "Asistencias promedio",
-        data: [85, 90, 80, 88, 92, 87],
-        backgroundColor: "#4A90E2",
+        label: "Cantidad Total",
+        data: [data.alumnos || 0, data.docentes || 0, data.cursos || 0, data.planTrabajo || 0],
+        backgroundColor: ["#4A90E2", "#50E3C2", "#F5A623", "#D0021B"],
         borderRadius: 5,
       },
     ],
@@ -95,21 +94,9 @@ const Dashboard = () => {
 
       </div>
 
-      <div className="graficos">
-        <div className="dashboard-chart">
-          <h2>Resumen de Asistencias</h2>
-          <Bar data={chartData} />
-        </div>
-        <div className="dashboard-chart">
-          <h2>Resumen de Asistencias</h2>
-          <Bar data={chartData} />
-        </div>
-        <div className="dashboard-chart">
-          <h2>Resumen de Asistencias</h2>
-          <Bar data={chartData} />
-        </div>
-        <div className="dashboard-chart">
-          <h2>Resumen de Asistencias</h2>
+      <div className="graficos" style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <div className="dashboard-chart" style={{ width: "80%", maxWidth: "800px" }}>
+          <h2>Resumen de la Plataforma</h2>
           <Bar data={chartData} />
         </div>
       </div>

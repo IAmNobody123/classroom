@@ -84,3 +84,23 @@
 .btn-escoger:hover {
   background: #00c420;
 }
+
+.contenedorCursosReporte{
+  width: 90%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.cursoCard2{
+  background: blanchedalmond;
+  color: black;
+  border: none;
+  padding: 2rem 2rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  width: fit-content;
+  margin: 0 auto;
+}

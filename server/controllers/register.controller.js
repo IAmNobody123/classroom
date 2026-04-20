@@ -1,12 +1,86 @@
 const pool = require("../db/database");
 const bcrypt = require("bcrypt");
+const nodemailer = require("nodemailer");
+
+const verificationCodes = new Map();
+
+const sendValidationCode = async (req, res) => {
+  const { correo } = req.body;
+
+  if (!correo) {
+    return res.status(400).json({ error: "Correo requerido para enviar código." });
+  }
+
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  verificationCodes.set(correo, { code, timestamp: Date.now() });
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER || "nelsonquispecarpio@gmail.com",
+        pass: process.env.EMAIL_PASS || "eqxh qvrx goui fydb",
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER || "tu_correo@gmail.com",
+      to: correo,
+      subject: "Código de Verificación - Registro de Usuario",
+      html: `<h3>Tu código de verificación para la plataforma escolar es: <b>${code}</b></h3>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.json({ success: true, message: "Código enviado a tu correo exitosamente." });
+  } catch (error) {
+    console.error("Error enviando correo con Nodemailer:", error);
+    res.status(500).json({ success: false, error: "Error enviando correo. Revisa tus credenciales EMAIL_USER y EMAIL_PASS en el .env." });
+  }
+};
 
 const registerUsers = async (req, res) => {
-  const { correo, contrasena, rol, nombre, apellido } = req.body;
+  const { correo, contrasena, rol, nombre, apellido, dni, codigo } = req.body;
   const image = req.file ? req.file.filename : null;
+
+  // Validar Código Único de Registro enviado al correo
+  const storedCodeData = verificationCodes.get(correo);
+  
+  if (!storedCodeData || storedCodeData.code !== codigo) {
+    return res.status(400).json({ success: false, error: "Código de verificación incorrecto o no solicitado." });
+  }
+
   try {
+    // Validar Correo Electrónico Único
+    const userExist = await pool.query("SELECT * FROM usuarios WHERE username = $1", [correo]);
+    if (userExist.rows.length > 0) {
+      return res.status(400).json({ success: false, error: "El correo electrónico ya se encuentra registrado." });
+    }
+
+    // Validar DNI Único (En directores o docentes)
+    const dniExistDocente = await pool.query("SELECT * FROM docentes WHERE dni = $1", [dni]);
+    const dniExistDirector = await pool.query("SELECT * FROM usuarios WHERE dnidirector = $1", [dni]);
+    if (dniExistDocente.rows.length > 0 || dniExistDirector.rows.length > 0) {
+      return res.status(400).json({ success: false, error: "El DNI proporcionado ya se encuentra registrado." });
+    }
+
+    // Consumir el código para que no se re-use
+    verificationCodes.delete(correo);
     const hashedPassword = await bcrypt.hash(contrasena, 8);
 
+    if (rol === "director") {
+      const query = `INSERT INTO usuarios (username, password_hash, rol, imagen, nombreDirector,apellidoDirector,dniDirector)
+     VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`;
+      const result = await pool.query(query, [
+        correo,
+        hashedPassword,
+        rol,
+        image,
+        nombre,
+        apellido,
+        dni
+      ]);
+      return res.status(201).json({ success: true, user: result.rows[0] });
+    }
     const query = `INSERT INTO usuarios (username, password_hash, rol, imagen)
      VALUES ($1, $2, $3, $4) RETURNING *`;
     const result = await pool.query(query, [
@@ -15,15 +89,16 @@ const registerUsers = async (req, res) => {
       rol,
       image,
     ]);
-
     if (result.rows.length > 0 && rol === "docente") {
       const newUser = result.rows[0];
       const docenteQuery =
-        "INSERT INTO docentes (usuario_id, nombre, correo) VALUES ($1, $2, $3)";
+        "INSERT INTO docentes (usuario_id, nombre, correo, apellido, dni) VALUES ($1, $2, $3, $4, $5)";
       await pool.query(docenteQuery, [
         newUser.id,
-        nombre + " " + apellido,
+        nombre,
         correo,
+        apellido,
+        dni
       ]);
       res.status(201).json({ success: true, user: newUser });
       return;
@@ -39,7 +114,7 @@ const registerUsers = async (req, res) => {
 const listUsers = async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT d.id, d.nombre, d.correo, d.estado, u.imagen
+      SELECT d.id, d.nombre,d.apellido, d.correo, d.estado, u.imagen, d.dni
       FROM docentes d 
       INNER JOIN usuarios u ON d.usuario_id = u.id
     `);
@@ -65,4 +140,5 @@ const listUsers = async (req, res) => {
 module.exports = {
   registerUsers,
   listUsers,
+  sendValidationCode,
 };

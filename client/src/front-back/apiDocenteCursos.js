@@ -1,5 +1,5 @@
-// const API_URL = "http://localhost:5000/api";
-const API_URL = "https://classroom-09y7.onrender.com/api";
+const API_URL = "http://localhost:5000/api";
+// const API_URL = "https://classroom-09y7.onrender.com/api";
 
 export const getListCursosDocente = async (id) => {
   const response = await fetch(`${API_URL}/listCursosDocente/${id}`);
@@ -23,6 +23,13 @@ export const insertAlumnoCurso = async (formData) => {
 
 export const listAlumnosCursos = async (id) => {
   const response = await fetch(`${API_URL}/listAlumnosCursos/${id}`);
+  return response.json();
+};
+
+export const deleteAlumnoCurso = async (id) => {
+  const response = await fetch(`${API_URL}/deleteAlumnoCurso/${id}`, {
+    method: "DELETE",
+  });
   return response.json();
 };
 
@@ -149,10 +156,21 @@ export const sumarParticipacion = async (data) => {
   return response.json();
 };
 
+export const updateParticipaciones = async (data) => {
+  const response = await fetch(`${API_URL}/updateParticipaciones`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+};
+
 export const uploadPlanTrabajo = async (formData) => {
   const response = await fetch(`${API_URL}/uploadPlanTrabajo`, {
     method: "POST",
-    body: formData, 
+    body: formData,
   });
   return response.json();
 };
@@ -197,5 +215,16 @@ export const getDataDashboardDocente = async (id) => {
   const response = await fetch(
     `${API_URL}/getDataDashboardDocente/${id}`,
   );
+  return response.json();
+};
+
+export const generarReporteCursoData = async (data) => {
+  const response = await fetch(`${API_URL}/generarReporteCurso`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
   return response.json();
 };

@@ -38,10 +38,10 @@ const DashboardDocente = () => {
     datasets: [],
   });
 
-  const [notasData, setNotasData] = useState({
-    labels: [],
-    datasets: [],
-  });
+  // const [notasData, setNotasData] = useState({
+  //   labels: [],
+  //   datasets: [],
+  // });
 
   const [alumnosClase, setAlumnosClase] = useState({
     labels: [],
@@ -58,12 +58,12 @@ const DashboardDocente = () => {
 
     doc.text("Reporte de Asistencia", 14, 15);
 
-    const tableColumn = ["Nombre", "Apellido", "Grado","Curso","Discapacidad"];
+    const tableColumn = ["Nombre", "Apellido", "Grado", "Curso", "Discapacidad"];
     const tableRows = [];
 
     alumnosCurso.forEach((fila) => {
 
-      tableRows.push([fila.nombre, fila.apellido,fila.grado,fila.curso, fila.discapacidad]);
+      tableRows.push([fila.nombre, fila.apellido, fila.grado, fila.curso, fila.discapacidad]);
     });
 
     autoTable(doc, {
@@ -101,17 +101,17 @@ const DashboardDocente = () => {
           ],
         });
 
-        setNotasData({
-          labels: stats.notas.map((n) => n.nombre),
-          datasets: [
-            {
-              label: "Promedio de notas",
-              data: stats.notas.map((n) => n.promedio),
-              backgroundColor: "#f39c12",
-              borderRadius: 5,
-            },
-          ],
-        });
+        // setNotasData({
+        //   labels: stats.notas.map((n) => n.nombre),
+        //   datasets: [
+        //     {
+        //       label: "Promedio de notas",
+        //       data: stats.notas.map((n) => n.promedio),
+        //       backgroundColor: "#f39c12",
+        //       borderRadius: 5,
+        //     },
+        //   ],
+        // });
         setAlumnosClase({
           labels: stats.alumnosCount.map((a) => a.nombre),
           datasets: [
@@ -175,14 +175,14 @@ const DashboardDocente = () => {
             <p>No hay datos de asistencia aún.</p>
           )}
         </div>
-        <div className="docente-chart">
+        {/* <div className="docente-chart">
           <h2> Promedio de notas por Curso</h2>
           {notasData.labels.length > 0 ? (
             <Bar data={notasData} />
           ) : (
             <p>No hay datos de notas aún.</p>
           )}
-        </div>
+        </div> */}
         <div className="docente-chart">
           <h2> Cantidad de alumnos por Curso</h2>
           {alumnosClase.labels.length > 0 ? (

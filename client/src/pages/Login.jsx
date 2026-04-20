@@ -150,8 +150,21 @@ export default function Login() {
                 />
               </div>
               <div className="bloqueButtonLogin">
+                <label htmlFor="buttonLogin">Ingresar</label>
                 <button className="buttonLogin" type="submit">
                   Ingresar
+                </button>
+                <label htmlFor="buttonLogin">Ingresar</label>
+                <button
+                  className="buttonRegistro"
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/registro");
+                  }}
+                  style={{ marginTop: "10px", backgroundColor: "#3b82f6" }}
+                >
+                  Registrar usuario
                 </button>
               </div>
             </fieldset>

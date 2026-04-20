@@ -6,16 +6,23 @@ const convertirWordAPdf = require("./convertToPdf");
 
 const listCursosDocente = async (req, res) => {
   const { id } = req.params;
+  const BACKEND_URL =
+    process.env.BACKEND_URL || "http://localhost:5000";
   try {
     const result = await pool.query(
-      `SELECT c.id as id, c.nombre as nombre, c.descripcion as descripcion, c.grado as grado 
+      `SELECT c.id as id, c.nombre as nombre, c.descripcion as descripcion, c.grado as grado ,c.imagen as imagencurso
     FROM clases c inner join docentes d on c.docente_id = d.id
     inner join usuarios u on d.usuario_id = u.id
     where u.id = $1`,
       [id],
     );
 
-    res.status(200).json(result.rows);
+    const resultImage = result.rows.map((curso) => ({
+      ...curso,
+      imagenUrl: `${BACKEND_URL}/uploads/img/cursos/${curso.imagencurso}`,
+    }));
+
+    res.status(200).json(resultImage);
   } catch (error) {
     console.error("Error al obtener cursos del docente:", error);
     res.status(500).json({ error: "Error en el servidor" });
@@ -74,6 +81,19 @@ const listAlumnosCursos = async (req, res) => {
     }));
 
     res.status(200).json(resultImage);
+  } catch (error) {
+    console.error("Error al obtener cursos del docente:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+const deleteAlumnoCurso = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query(
+      `DELETE FROM alumnos WHERE id = $1 RETURNING *`,
+      [id],
+    );
+    res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error("Error al obtener cursos del docente:", error);
     res.status(500).json({ error: "Error en el servidor" });
@@ -167,6 +187,7 @@ const listadoMaterialCurso = async (req, res) => {
 		inner join docentes de on de.id = d.docente_id
 		inner join usuarios u on u.id = de.usuario_id
     where u.id = $1
+    order by d.id desc
       `,
       [id],
     );
@@ -625,6 +646,45 @@ const getFechasAsistencia = async (req, res) => {
   }
 };
 
+const generarReporteCurso = async (req, res) => {
+  const { cursoId, tipoReporte } = req.body;
+  console.log(cursoId, tipoReporte);
+  try {
+    const cursoRes = await pool.query('SELECT nombre, grado FROM clases WHERE id = $1', [cursoId]);
+    if (cursoRes.rows.length === 0) return res.status(404).json({ error: 'Curso no encontrado' });
+    const curso = cursoRes.rows[0];
+
+    const alumnosRes = await pool.query(`
+      SELECT 
+        a.id, a.nombre, a.apellido,
+        (
+          SELECT COALESCE(count(p.nota), 0) 
+  FROM participaciones p
+  JOIN documentos d ON p.documento_id = d.id 
+  WHERE p.alumno_id = a.id AND d.curso_id = $1
+        ) as promedio_notas,
+        (
+          SELECT COALESCE((SUM(CASE WHEN asis.presente = true THEN 1 ELSE 0 END)::float / NULLIF(COUNT(asis.id), 0)) * 100, 0) 
+          FROM asistencias asis 
+          WHERE asis.alumno_id = a.id AND asis.clase_id = $1
+        ) as porcentaje_asistencia
+      FROM alumnos a
+      WHERE a.clase_id = $1
+      ORDER BY a.apellido, a.nombre
+    `, [cursoId]);
+
+    res.status(200).json({
+      curso: curso.nombre,
+      grado: curso.grado,
+      tipoReporte,
+      alumnos: alumnosRes.rows
+    });
+  } catch (error) {
+    console.error("Error al generar reporte:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+
 const getAsistenciaFecha = async (req, res) => {
   const { cursoId, fecha } = req.body;
   try {
@@ -811,11 +871,26 @@ const getParticipaciones = async (req, res) => {
   }
 };
 const insertParticipaciones = async (req, res) => {
-  const { alumno_id, documento_id} = req.body;
+  const { alumno_id, documento_id } = req.body;
   try {
     const result = await pool.query(
       `INSERT INTO participaciones (alumno_id, documento_id, nota, fecha_revision)
         VALUES ($1, $2, 1, NOW());`,
+      [alumno_id, documento_id],
+    );
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error en la consulta:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+};
+const updateParticipaciones = async (req, res) => {
+  const { alumno_id, documento_id } = req.body;
+  try {
+    const result = await pool.query(
+      `UPDATE participaciones
+        SET nota = nota - 1
+        WHERE alumno_id = $1 AND documento_id = $2;`,
       [alumno_id, documento_id],
     );
     res.status(200).json(result.rows);
@@ -829,6 +904,7 @@ module.exports = {
   listCursosDocente,
   insertAlumnoCurso,
   listAlumnosCursos,
+  deleteAlumnoCurso,
   marcarAsistencia,
   materialCurso,
   listadoMaterialCurso,
@@ -850,4 +926,6 @@ module.exports = {
   updateEstadoMaterial,
   getParticipaciones,
   insertParticipaciones,
+  generarReporteCurso,
+  updateParticipaciones,
 };

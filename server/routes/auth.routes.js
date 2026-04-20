@@ -12,6 +12,7 @@ const {
 const {
   registerUsers,
   listUsers,
+  sendValidationCode,
 } = require("../controllers/register.controller");
 const {
   getListDocentes,
@@ -27,6 +28,7 @@ const {
   listCursosDocente,
   insertAlumnoCurso,
   listAlumnosCursos,
+  deleteAlumnoCurso,
   marcarAsistencia,
   materialCurso,
   listadoMaterialCurso,
@@ -48,6 +50,8 @@ const {
   updateEstadoMaterial,
   getParticipaciones,
   insertParticipaciones,
+  generarReporteCurso,
+  updateParticipaciones,
 } = require("../controllers/docente.controller");
 
 // imagenes de docentes
@@ -150,10 +154,11 @@ const storageImageCurso = multer.diskStorage({
 const cursosUpload = multer({ storage: storageImageCurso });
 
 router.post("/login", login);
-router.post("/register",upload.single("image") ,register);
+router.post("/register", upload.single("image"), register);
 router.get("/validateToken", validateToken);
 
 router.post("/registerUsers", upload.single("image"), registerUsers);
+router.post("/sendValidationCode", sendValidationCode);
 router.get("/listUsers", listUsers);
 
 // director
@@ -172,6 +177,7 @@ router.post(
   insertAlumnoCurso
 );
 router.get("/listAlumnosCursos/:id", listAlumnosCursos);
+router.delete("/deleteAlumnoCurso/:id", deleteAlumnoCurso);
 router.post("/marcarAsistencia", marcarAsistencia);
 router.post("/materialCurso", uploadPlan.single("archivo"), materialCurso);
 router.get("/listadoMaterialCurso/:id", listadoMaterialCurso);
@@ -187,6 +193,8 @@ router.get("/getAllMaterialesPendientes/:id", getAllMaterialesPendientes);
 router.post("/updateEstadoMaterial/:id", updateEstadoMaterial);
 router.get("/getParticipaciones/:docId/:cursoId", getParticipaciones);
 router.post("/insertParticipaciones", insertParticipaciones);
+router.post("/generarReporteCurso", generarReporteCurso);
+router.post("/updateParticipaciones", updateParticipaciones);
 
 // Planes de Trabajo
 router.post("/uploadPlanTrabajo", uploadMaterial.single("archivo"), uploadPlanTrabajo);

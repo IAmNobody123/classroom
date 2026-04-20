@@ -158,12 +158,12 @@ export default function PlanTrabajo() {
   return (
     <div className="planes-page">
       <div className="top-buttons">
-        <button
+        {/* <button
           className="menu-btn"
           onClick={() => setShowModal(false)}
         >
           Listado de planes de trabajo
-        </button>
+        </button> */}
         <button
           className="menu-btn"
           onClick={() => setShowModal(true)}

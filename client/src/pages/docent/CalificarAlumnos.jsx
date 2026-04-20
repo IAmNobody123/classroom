@@ -5,6 +5,7 @@ import {
   finalizarRevision,
   sumarParticipacion,
   getAllMaterialesPendientes,
+  updateParticipaciones,
 } from "../../front-back/apiDocenteCursos";
 import Modal from "../../components/Modal";
 import "../../styles/docente/formularPreguntas.css"; // Reuse existing styles
@@ -42,6 +43,29 @@ export default function CalificarAlumnos() {
       Swal.fire(
         "Error",
         "No se pudieron cargar los alumnos",
+        "error",
+      );
+    }
+  };
+  const handleRestarParticipacion = async (alumnoId) => {
+    try {
+      await updateParticipaciones({
+        alumno_id: alumnoId,
+        documento_id: selectedMaterial.id,
+      });
+
+      setAlumnos((prev) =>
+        prev.map((a) =>
+          a.id === alumnoId
+            ? { ...a, participaciones: a.participaciones - 1 }
+            : a,
+        ),
+      );
+    } catch (error) {
+      console.error(error);
+      Swal.fire(
+        "Error",
+        "No se pudo registrar la participación",
         "error",
       );
     }
@@ -167,7 +191,7 @@ export default function CalificarAlumnos() {
                         {alum.participaciones}
                       </td>
 
-                      <td style={{ padding: "8px" }}>
+                      <td style={{ padding: "8px", display: "flex", gap: "10px" }}>
                         <button
                           onClick={() =>
                             handleSumarParticipacion(alum.id)
@@ -182,6 +206,21 @@ export default function CalificarAlumnos() {
                           }}
                         >
                           +1
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleRestarParticipacion(alum.id)
+                          }
+                          style={{
+                            background: "#007bff",
+                            color: "white",
+                            border: "none",
+                            padding: "5px 10px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          -1
                         </button>
                       </td>
                     </tr>

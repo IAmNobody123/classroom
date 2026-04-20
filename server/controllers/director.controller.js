@@ -18,7 +18,7 @@ const getListCursos = async (req, res) => {
   try {
     const result =
       await pool.query(`select c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado, c.imagen 
-      from clases c inner join docentes d on c.docente_id = d.id`);
+      from clases c inner join docentes d on c.docente_id = d.id where d.estado = 'activo'`);
     const resultImage = result.rows.map((curso) => ({
       ...curso,
       imagenUrl: `${BACKEND_URL}/uploads/img/cursos/${curso.imagen}`,
@@ -95,9 +95,9 @@ const listAllPlanesTrabajo = async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso
-          FROM planes_trabajo p
+          FROM planes_trabajo p inner
           JOIN clases c ON p.curso_id = c.id
-          JOIN docentes d ON c.docente_id = d.id
+
           `,
     );
 
@@ -120,19 +120,80 @@ const listAllPlanesTrabajo = async (req, res) => {
 };
 
 const desactivarUser = async (req, res) => {
+  // const { id } = req.params;
+  // try {
+  //   const id_usuario = await pool.query(
+  //     "select u.id from usuarios u inner join docentes d on u.id = d.usuario_id where d.id =$1",
+  //     [id],
+  //   );
+  //   const result = await pool.query(
+  //     "DELETE FROM docentes WHERE id = $1 RETURNING *",
+  //     [id],
+  //   );
+  //   const result2 = await pool.query(
+  //     "delete from usuarios where id = $1",
+  //     [id_usuario.rows[0].id],
+  //   );
+  //   res.json({
+  //     success: true,
+  //     message: "Usuario eliminado correctamente",
+  //   });
+  // } catch (error) {
+  //   console.error("Error en la consulta:", error);
+  //   res.status(500).json({ error: "Error en el servidor" });
+  // }
   const { id } = req.params;
+
+  const client = await pool.connect();
+
   try {
-    const result = await pool.query(
-      "UPDATE docentes SET estado = 'inactivo' WHERE id = $1 RETURNING *",
-      [id],
+    await client.query("BEGIN");
+
+
+    const resultUser = await client.query(
+      `SELECT u.id 
+       FROM usuarios u 
+       INNER JOIN docentes d ON u.id = d.usuario_id 
+       WHERE d.id = $1`,
+      [id]
     );
+
+    if (resultUser.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({
+        success: false,
+        message: "Docente no encontrado",
+      });
+    }
+
+    const usuarioId = resultUser.rows[0].id;
+
+
+    await client.query(
+      "DELETE FROM docentes WHERE id = $1",
+      [id]
+    );
+
+
+    await client.query(
+      "DELETE FROM usuarios WHERE id = $1",
+      [usuarioId]
+    );
+
+    await client.query("COMMIT");
+
     res.json({
       success: true,
-      message: "Usuario desactivado correctamente",
+      message: "Usuario eliminado correctamente",
     });
+
   } catch (error) {
+    await client.query("ROLLBACK");
     console.error("Error en la consulta:", error);
+
     res.status(500).json({ error: "Error en el servidor" });
+  } finally {
+    client.release();
   }
 };
 

@@ -26,6 +26,9 @@ const login = async (req, res) => {
       id: user.id,
       username: user.username,
       rol: user.rol,
+      nombreDirector: user.nombredirector,
+      apellidoDirector: user.apellidodirector,
+      dniDirector: user.dnidirector,
       imagen: `${backendUrl}/uploads/img/perfil/${user.imagen}`,
     };
 
@@ -37,7 +40,7 @@ const login = async (req, res) => {
     res.json({
       success: true,
       message: "Login exitoso",
-      token:token,
+      token: token,
       user: payload,
     });
   } catch (error) {
@@ -56,7 +59,7 @@ const validateToken = (req, res) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-
+    console.log(decoded);
     res.json({
       valid: true,
       user: decoded

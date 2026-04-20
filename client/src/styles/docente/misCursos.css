@@ -10,12 +10,14 @@
   background-attachment: fixed;
   min-height: 100vh;
 }
-.misCursos > h2 {
+
+.misCursos>h2 {
   text-align: center;
   font-size: 2rem;
   padding-bottom: 1rem;
   color: var(--guinda);
 }
+
 .containerCursosDocente {
   display: flex;
   flex-direction: row;
@@ -27,23 +29,39 @@
   margin: 1rem;
   background-color: var(--blanco-calido);
 }
+
 .cursoCard {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   background-color: var(--cards);
-  justify-content: center;
+  justify-content: space-around;
   padding: 1rem;
   border-radius: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 150px;
+  width: 90%;
   margin: 10px 0;
 }
-.botonesCurso {
+
+.informacionCurso {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
+
+.informacionCurso img {
+  width: 100px;
+  height: 100px;
+}
+
+.botonesCurso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+}
+
 .botonesCurso button {
   width: 150px;
   height: auto;
@@ -73,6 +91,7 @@
   margin: 1rem;
   background-color: var(--guinda-hover);
 }
+
 .alumno {
   width: 45vw;
   display: flex;
@@ -86,6 +105,7 @@
   margin: 10px 0;
   gap: 3rem;
 }
+
 .botonesAsistencia {
   display: flex;
   flex-direction: row;
@@ -103,6 +123,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin: 10px 0;
 }
+
 .ausente {
   display: flex;
   flex-direction: row;
@@ -122,6 +143,7 @@
   margin: 10px;
   padding: 10px;
 }
+
 .informacion {
   display: flex;
   flex-direction: column;
@@ -143,6 +165,7 @@
   justify-content: center;
   gap: 1rem;
 }
+
 .imagenEstudiante {
   display: flex;
   flex-direction: column;
@@ -186,6 +209,7 @@
   justify-content: center;
   gap: 1rem;
 }
+
 /* calendario */
 .containerDetallesCurso {
   display: flex;
@@ -259,18 +283,20 @@
 
 /* asistencia */
 .modal-content {
-  max-height: 90vh; 
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
 }
+
 .modal-header {
   flex-shrink: 0;
   padding-bottom: 10px;
   border-bottom: 1px solid #ddd;
 }
+
 .modal-body {
   flex: 1;
-  overflow-y: auto;          
+  overflow-y: auto;
   padding: 20px;
 }
 
@@ -313,6 +339,7 @@
   object-fit: cover;
   border: 2px solid var(--guinda);
 }
+
 .cardAlumno p {
   margin: 0;
   font-weight: 600;
@@ -361,4 +388,15 @@
   opacity: 0.6;
   cursor: not-allowed;
   filter: grayscale(60%);
+}
+.botonAgregar {
+  background-color: var(--guinda);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  justify-content: center;
+  display: flex;
+  margin: 0 auto;
 }

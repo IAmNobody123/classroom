@@ -1,10 +1,21 @@
-// const API_URL = "http://localhost:5000/api";
-const API_URL = "https://classroom-09y7.onrender.com/api";
+const API_URL = "http://localhost:5000/api";
+// const API_URL = "https://classroom-09y7.onrender.com/api";
 
 export const registerUser = async (formData) => {
   const response = await fetch(`${API_URL}/registerUsers`, {
     method: "POST",
     body: formData,
+  });
+  return response.json();
+};
+
+export const sendValidationCode = async (correo) => {
+  const response = await fetch(`${API_URL}/sendValidationCode`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ correo }),
   });
   return response.json();
 };

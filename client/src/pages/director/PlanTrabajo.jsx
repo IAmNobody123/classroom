@@ -107,7 +107,7 @@ export default function PlanTrabajoVer() {
           <thead>
             <tr>
               <th>Título</th>
-              <th>Fecha</th>
+              <th>Fecha de Asignación</th>
               <th>Descripción</th>
               <th>Curso</th>
               <th></th>

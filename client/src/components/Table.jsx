@@ -11,7 +11,6 @@ const Table = ({ columns, data, onDesactivar }) => {
   };
   return (
     <div className="table-container">
-      
       <table className="custom-table">
         <thead>
           <tr>
@@ -46,8 +45,10 @@ const Table = ({ columns, data, onDesactivar }) => {
                       >
                         Ver detalles
                       </button>
-                      <button className="action-button eliminar"
-                      onClick={()=> onDesactivar(row.id)}>
+                      <button
+                        className="action-button eliminar"
+                        onClick={() => onDesactivar(row.id)}
+                      >
                         Eliminar
                       </button>
                     </td>
@@ -67,26 +68,27 @@ const Table = ({ columns, data, onDesactivar }) => {
           onClose={() => setIsOpen(false)}
           title={`Detalles de ${detalles.nombre || ""}`}
         >
-          <p>
-            <strong>Nombre:</strong> {detalles.nombre}
-          </p>
-          <p>
-            <strong>Apellido:</strong> {detalles.apellido}
-          </p>
-          <p>
-            <strong>Correo:</strong> {detalles.correo}
-          </p>
-          <p>
-            <strong>Rol:</strong> {detalles.rol}
-          </p>
-
-          {detalles.imagen && (
-            <img
-              src={detalles.imagen}
-              alt="Usuario"
-              style={{ width: "120px", borderRadius: "8px" }}
-            />
-          )}
+          <div className="modal-card">
+            <div className="modal-header">
+              {detalles.imagen && (
+                <img src={detalles.imagen} className="modal-avatar" />
+              )}
+              <div className="modal-info">
+                <h3>
+                  {detalles.nombre} {detalles.apellido}
+                </h3>
+                <p>
+                  <strong>Correo:</strong> {detalles.correo}
+                </p>
+                <p>
+                  <strong>Dni:</strong> {detalles.dni}
+                </p>
+                <p>
+                  <strong>Estado :</strong> {detalles.estado}
+                </p>
+              </div>
+            </div>
+          </div>
         </Modal>
       )}
     </div>

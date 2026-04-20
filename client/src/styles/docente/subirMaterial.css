@@ -220,7 +220,7 @@
   padding: 12px;
   border: none;
   border-radius: 8px;
-  background: #6c63ff;
+  background: var(--guinda);
   color: white;
   font-weight: bold;
   cursor: pointer;

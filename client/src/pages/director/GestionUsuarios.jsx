@@ -18,7 +18,7 @@ function GestionUsuarios() {
     apellido: "",
     correo: "",
     contrasena: "",
-    rol: "director",
+    rol: "docente",
     imagen: null,
     imagenPreview: "",
   });
@@ -53,7 +53,9 @@ function GestionUsuarios() {
     formData.append("apellido", data.apellido);
     formData.append("correo", data.correo);
     formData.append("contrasena", data.contrasena);
+    formData.append("dni", data.dni);
     formData.append("rol", data.rol);
+
 
     if (data.imagen) {
       formData.append("image", data.imagen);
@@ -78,9 +80,10 @@ function GestionUsuarios() {
       apellido: "",
       correo: "",
       contrasena: "",
-      rol: "director",
+      rol: "docente",
       imagen: null,
       imagenPreview: "",
+
     });
   };
 
@@ -92,11 +95,12 @@ function GestionUsuarios() {
   const handleDesactivar = async (id) => {
     const response = await desactivarUser(id);
     if (response.success) {
-      Toast(
-        "Desactivado",
-        "El usuario ha sido desactivado",
-        "success",
-      );
+      Swal.fire({
+        icon: "success",
+        title: "Usuario Eliminado exitosamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
       getDataUsers();
     }
   };
@@ -153,6 +157,23 @@ function GestionUsuarios() {
                     }
                   />
                 </div>
+
+                <div className="formGroup boxLastName">
+                  <label>Dni:</label>
+                  <input
+                    type="text"
+                    maxLength={8}
+                    placeholder="Dni"
+                    value={data.dni}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        dni: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+
                 <div className="formGroup boxEmail">
                   <label>Correo</label>
                   <input
@@ -193,7 +214,6 @@ function GestionUsuarios() {
                       }))
                     }
                   >
-                    <option value="director">Director</option>
                     <option value="docente">Docente</option>
                   </select>
                 </div>
@@ -230,7 +250,7 @@ function GestionUsuarios() {
           </form>
         </Modal>
       </div>
-      <div className="filtro-estado">
+      {/* <div className="filtro-estado">
         <div
           onClick={() => setFiltroEstado("activo")}
           className="botonFiltro"
@@ -251,7 +271,7 @@ function GestionUsuarios() {
         >
           Todos
         </div>
-      </div>
+      </div> */}
       <Table
         columns={columns}
         data={usuarios.filter((user) => {

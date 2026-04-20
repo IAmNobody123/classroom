@@ -69,7 +69,7 @@ export default function GestionCursos() {
         >
           Agregar Curso
         </button>
-        <Modal
+        {/* <Modal
           isOpen={openModal}
           onClose={() => setOpenModal(false)}
           title={"Agregar Curso"}
@@ -137,6 +137,85 @@ export default function GestionCursos() {
 
             <button type="submit">Agregar</button>
           </form>
+        </Modal> */}
+        <Modal
+          isOpen={openModal}
+          onClose={() => setOpenModal(false)}
+          title={"Agregar Curso"}
+        >
+          <form onSubmit={handleSubmit} className="form-container">
+            <div className="form-grid">
+              <div className="form-class form-group">
+                <label className="form-label">Nombre del curso</label>
+                <input
+                  type="text"
+                  name="curso"
+                  className="form-input"
+                  placeholder="Ej: Matemáticas"
+                  onChange={(e) => setNombreCurso(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-class form-group">
+                <label className="form-label">Docente</label>
+                <select
+                  name="docente"
+                  className="form-select"
+                  required
+                  onChange={(e) => setDocente(e.target.value)}
+                >
+                  <option value="">Seleccione una opción</option>
+                  {docentes.map((docente) => (
+                    <option key={docente.id} value={docente.id}>
+                      {docente.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-class form-group">
+                <label className="form-label">Grado</label>
+                <select
+                  name="grado"
+                  className="form-select"
+                  required
+                  onChange={(e) => setGrado(e.target.value)}
+                >
+                  <option value="">Seleccione una opción</option>
+                  <option value="5to grado">5to grado</option>
+                  <option value="6to grado">6to grado</option>
+                </select>
+              </div>
+
+              <div className="form-class form-group">
+                <label className="form-label">Imagen del curso</label>
+                <input
+                  type="file"
+                  name="imagen"
+                  className="form-file"
+                  accept="image/*"
+                  onChange={(e) => setImagen(e.target.files[0])}
+                />
+              </div>
+
+              {/* Este ocupa toda la fila */}
+              <div className="form-class form-group full-width">
+                <label className="form-label">Descripción</label>
+                <textarea
+                  name="description"
+                  className="form-textarea"
+                  placeholder="Breve descripción del curso..."
+                  required
+                  onChange={(e) => setDescripcion(e.target.value)}
+                ></textarea>
+              </div>
+            </div>
+
+            <button type="submit" className="form-button">
+              Agregar Curso
+            </button>
+          </form>
         </Modal>
       </div>
       <div className="bodyCursos">
@@ -181,15 +260,15 @@ export default function GestionCursos() {
               <div className="detallesCurso">
                 <h2>{cursoSeleccionado.curso}</h2>
                 <p>
-                  <strong>Descripción:</strong>{" "}
+                  <strong>Añande una descripción:</strong>{" "}
                   {cursoSeleccionado.descripcion}
                 </p>
                 <p>
-                  <strong>Docente:</strong>{" "}
+                  <strong>Selecciona un docente:</strong>{" "}
                   {cursoSeleccionado.docente}
                 </p>
                 <p>
-                  <strong>Grado:</strong> {cursoSeleccionado.grado}
+                  <strong>Selecciona un grado:</strong> {cursoSeleccionado.grado}
                 </p>
               </div>
             </div>
