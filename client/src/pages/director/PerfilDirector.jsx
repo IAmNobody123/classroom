@@ -1,5 +1,5 @@
 import React from "react";
-import useAuth from "../../context/useAuth";
+// import useAuth from "../../context/useAuth";
 
 export default function PerfilDirector() {
   const user = JSON.parse(localStorage.getItem("user"));
