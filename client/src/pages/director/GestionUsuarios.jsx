@@ -55,7 +55,7 @@ function GestionUsuarios() {
     formData.append("contrasena", data.contrasena);
     formData.append("dni", data.dni);
     formData.append("rol", data.rol);
-
+    formData.append("adminBypass", "true"); 
 
     if (data.imagen) {
       formData.append("image", data.imagen);

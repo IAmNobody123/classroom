@@ -18,13 +18,13 @@ const sendValidationCode = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER || "nelsonquispecarpio@gmail.com",
-        pass: process.env.EMAIL_PASS || "eqxh qvrx goui fydb",
+        user: process.env.EMAIL_USER || "iesanantonio3@gmail.com",
+        pass: process.env.EMAIL_PASS || "drtp nlfu bolx qhnw",
       },
     });
 
     const mailOptions = {
-      from: process.env.EMAIL_USER || "tu_correo@gmail.com",
+      from: process.env.EMAIL_USER || "iesanantonio3@gmail.com",
       to: correo,
       subject: "Código de Verificación - Registro de Usuario",
       html: `<h3>Tu código de verificación para la plataforma escolar es: <b>${code}</b></h3>`,
@@ -39,14 +39,18 @@ const sendValidationCode = async (req, res) => {
 };
 
 const registerUsers = async (req, res) => {
-  const { correo, contrasena, rol, nombre, apellido, dni, codigo } = req.body;
+  const { correo, contrasena, rol, nombre, apellido, dni, codigo, adminBypass } = req.body;
   const image = req.file ? req.file.filename : null;
 
-  // Validar Código Único de Registro enviado al correo
-  const storedCodeData = verificationCodes.get(correo);
-  
-  if (!storedCodeData || storedCodeData.code !== codigo) {
-    return res.status(400).json({ success: false, error: "Código de verificación incorrecto o no solicitado." });
+  // Validar Código Único de Registro enviado al correo, excepto si viene del Director (adminBypass)
+  if (adminBypass !== "true") {
+    const storedCodeData = verificationCodes.get(correo);
+    
+    if (!storedCodeData || storedCodeData.code !== codigo) {
+      return res.status(400).json({ success: false, error: "Código de verificación incorrecto o no solicitado." });
+    }
+    // Consumir el código para que no se re-use
+    verificationCodes.delete(correo);
   }
 
   try {
@@ -63,8 +67,6 @@ const registerUsers = async (req, res) => {
       return res.status(400).json({ success: false, error: "El DNI proporcionado ya se encuentra registrado." });
     }
 
-    // Consumir el código para que no se re-use
-    verificationCodes.delete(correo);
     const hashedPassword = await bcrypt.hash(contrasena, 8);
 
     if (rol === "director") {
