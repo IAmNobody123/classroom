@@ -20,42 +20,55 @@ const Reportes = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const generarPDF = () => {
-  const doc = new jsPDF();
+    const doc = new jsPDF();
+    const isNotas = tipoReporte === "notas";
 
-  doc.text("Reporte de Asistencia", 14, 15);
+    doc.text(`Reporte de ${isNotas ? "Notas" : "Asistencia"}`, 14, 15);
 
-  const tableColumn = ["Alumnos", "Asistencia","fecha"];
-  const tableRows = [];
+    const tableColumn = isNotas 
+      ? ["Alumnos", "Participaciones"] 
+      : ["Alumnos", "Asistencia", "Fecha"];
+    
+    const tableRows = [];
 
-  reporte.forEach((fila) => {
-    const asistencia = fila.presente ? "Presente" : "Ausente";
+    reporte.forEach((fila) => {
+      if (isNotas) {
+        tableRows.push([fila.nombre, fila.promedio]);
+      } else {
+        const asistencia = fila.presente ? "Presente" : "Ausente";
+        tableRows.push([fila.nombre, asistencia, fila.hora_registro]);
+      }
+    });
 
-    tableRows.push([
-      fila.nombre,
-      asistencia,
-      fila.hora_registro
-    ]);
-  });
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
 
-  autoTable(doc, {
-    head: [tableColumn],
-    body: tableRows,
-    startY: 20,
-  });
+    doc.save(`reporte_${tipoReporte}.pdf`);
+  };
 
-  doc.save("reporte.pdf");
-};
+  const generarExcel = () => {
+    const isNotas = tipoReporte === "notas";
+    const datosFormateados = reporte.map((fila) => {
+      if (isNotas) {
+        return {
+          Alumno: fila.nombre,
+          Participaciones: fila.promedio,
+        };
+      } else {
+        return {
+          Alumno: fila.nombre,
+          Fecha: fila.hora_registro,
+          Asistencia: fila.presente ? "Presente" : "Ausente",
+        };
+      }
+    });
 
-const generarExcel = () => {
-  const datosFormateados = reporte.map((fila) => ({
-    Alumno: fila.nombre,
-    fecha: fila.hora_registro,
-    Asistencia: fila.presente ? "Presente" : "Ausente",
-  }));
-
-  const worksheet = XLSX.utils.json_to_sheet(datosFormateados);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
+    const worksheet = XLSX.utils.json_to_sheet(datosFormateados);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
 
   const excelBuffer = XLSX.write(workbook, {
     bookType: "xlsx",
@@ -148,10 +161,10 @@ const generarExcel = () => {
               <thead>
                 <tr>
                   <th>Alumno</th>
-                  <th>Fecha</th>
+                  {tipoReporte !== "notas" && <th>Fecha</th>}
                   <th>
                     {tipoReporte === "notas"
-                      ? "Nota Promedio"
+                      ? "Participaciones"
                       : "Asistencia"}
                   </th>
                 </tr>
@@ -160,7 +173,7 @@ const generarExcel = () => {
                 {reporte.map((fila, index) => (
                   <tr key={index}>
                     <td>{fila.nombre}</td>
-                    <td>{fila.hora_registro}</td>
+                    {tipoReporte !== "notas" && <td>{fila.hora_registro}</td>}
                     <td>
                       {tipoReporte === "asistencia"
                         ? fila.presente

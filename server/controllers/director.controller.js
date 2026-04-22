@@ -17,7 +17,7 @@ const getListCursos = async (req, res) => {
     process.env.BACKEND_URL || "http://localhost:5000";
   try {
     const result =
-      await pool.query(`select c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado, c.imagen 
+      await pool.query(`select c.id, c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado, c.imagen 
       from clases c inner join docentes d on c.docente_id = d.id where d.estado = 'activo'`);
     const resultImage = result.rows.map((curso) => ({
       ...curso,
@@ -94,10 +94,10 @@ const dataDashboard = async (req, res) => {
 const listAllPlanesTrabajo = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso
-          FROM planes_trabajo p inner
+      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso, d.nombre as docente
+          FROM planes_trabajo p 
           JOIN clases c ON p.curso_id = c.id
-
+          JOIN docentes d ON c.docente_id = d.id
           `,
     );
 
@@ -198,17 +198,47 @@ const desactivarUser = async (req, res) => {
 };
 
 const getReportes = async (req, res) => {
-  const { curso, fecha, tipo } = req.body;
+  const { curso, fecha, tipoReporte } = req.body;
   try {
-    const result = await pool.query(
-      `select al.nombre , a.hora_registro, a.presente
-from clases c inner join alumnos al on c.id = al.clase_id
-inner join asistencias a on  a.alumno_id = al.id
-WHERE a.hora_registro::date = $1
- and c.nombre = $2 `,
-      [fecha, curso],
-    );
-    res.status(200).json(result.rows);
+    if (tipoReporte === "asistencia") {
+      const result = await pool.query(
+        `select al.apellido || ', ' || al.nombre as nombre, (a.hora_registro AT TIME ZONE 'UTC' AT TIME ZONE 'America/Lima') as hora_registro, a.presente
+        from clases c inner join alumnos al on c.id = al.clase_id
+        inner join asistencias a on a.alumno_id = al.id
+        WHERE (a.hora_registro AT TIME ZONE 'UTC' AT TIME ZONE 'America/Lima')::date = $1
+        and c.id = $2`,
+        [fecha, curso],
+      );
+      
+      const formated = result.rows.map(r => ({
+        ...r,
+        hora_registro: r.hora_registro ? new Date(r.hora_registro).toLocaleString('es-PE') : '-'
+      }));
+      res.status(200).json(formated);
+
+    } else if (tipoReporte === "notas") {
+      const result = await pool.query(`
+        SELECT 
+          a.apellido || ', ' || a.nombre as nombre,
+          (
+            SELECT COALESCE(count(p.nota), 0) 
+            FROM participaciones p
+            JOIN documentos d ON p.documento_id = d.id 
+            WHERE p.alumno_id = a.id AND d.curso_id = $1
+          ) as promedio
+        FROM alumnos a
+        WHERE a.clase_id = $1
+      `, [curso]);
+      
+      const data = result.rows.map(r => ({
+        ...r,
+        hora_registro: "-",
+        presente: null
+      }));
+      res.status(200).json(data);
+    } else {
+      res.status(400).json({ error: "Tipo de reporte inválido" });
+    }
   } catch (error) {
     console.error("Error en la consulta:", error);
     res.status(500).json({ error: "Error en el servidor" });

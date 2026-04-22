@@ -110,6 +110,7 @@ export default function PlanTrabajoVer() {
               <th>Fecha de Asignación</th>
               <th>Descripción</th>
               <th>Curso</th>
+              <th>Docente</th>
               <th></th>
             </tr>
           </thead>
@@ -124,6 +125,7 @@ export default function PlanTrabajoVer() {
                 </td>
                 <td>{p.descripcion}</td>
                 <td>{p.curso}</td>
+                <td>{p.docente}</td>
                 <td>
                   <button
                     onClick={() => handleViewPlan(p)}
