@@ -2,6 +2,7 @@ const { exec } = require("child_process");
 const path = require("path");
 
 const LO_COMMAND = "soffice";
+const oficcePath = process.env.OFFICE_PATH || "C:\\Program Files\\LibreOffice\\program\\soffice.exe";
 /**
  * Convierte un archivo Word (.doc o .docx) a PDF
  * @param {string} inputPath - ruta absoluta del archivo Word
@@ -17,7 +18,8 @@ const convertirWordAPdf = (inputPath) => {
     }
 
     const outputDir = path.dirname(inputPath); // misma carpeta de salida
-    const command = `${LO_COMMAND} --headless --convert-to pdf "${inputPath}" --outdir "${outputDir}"`;
+    // const command = `${LO_COMMAND} --headless --convert-to pdf "${inputPath}" --outdir "${outputDir}"`;
+        const command = `"${oficcePath}" --headless --convert-to pdf "${inputPath}" --outdir "${outputDir}"`;
 
     exec(command, (error) => {
       if (error) {

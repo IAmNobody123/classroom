@@ -20,14 +20,18 @@ export default function PlanTrabajo() {
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewHtml, setPreviewHtml] = useState("");
-  const [previewType, setPreviewType] = useState(""); 
+  const [previewType, setPreviewType] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
 
   // Form State
   const [titulo, setTitulo] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const hoy = new Date().toISOString().split("T")[0];
-  const [fecha, setFecha] = useState(hoy);
+  const hoy = new Date();
+  const fechaLocal = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
+
+  const [fecha, setFecha] = useState(fechaLocal);
   const [cursoId, setCursoId] = useState("");
   const [archivo, setArchivo] = useState(null);
 
@@ -70,7 +74,7 @@ export default function PlanTrabajo() {
     formData.append("archivo", archivo);
 
     try {
-      const result =await uploadPlanTrabajo(formData);
+      const result = await uploadPlanTrabajo(formData);
       if (result.error) {
         alert(result.error);
         return;
@@ -273,7 +277,7 @@ export default function PlanTrabajo() {
             <div>
               <label>Fecha:</label>
               <input
-              readOnly
+                readOnly
                 type="date"
                 value={fecha}
                 onChange={(e) => setFecha(Date.parse(e.target.value))}
