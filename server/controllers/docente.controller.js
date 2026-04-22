@@ -255,9 +255,10 @@ const getMaterialById = async (req, res) => {
     const rutaAbsoluta = path.join(archivo.ruta);
 
     const pdfPath = await convertirWordAPdf(rutaAbsoluta);
+    const normalizedPdfPath = pdfPath.replace(/\\/g, "/");
     res.status(200).json({
       ...archivo,
-      pdf: pdfPath,
+      pdf: normalizedPdfPath,
     });
   } catch (error) {
     console.error(
