@@ -9,6 +9,13 @@ const LO_COMMAND = "soffice";
  */
 const convertirWordAPdf = (inputPath) => {
   return new Promise((resolve, reject) => {
+    const ext = path.extname(inputPath).toLowerCase();
+    
+    // Si ya es un PDF, no es necesario convertir
+    if (ext === ".pdf") {
+      return resolve(inputPath);
+    }
+
     const outputDir = path.dirname(inputPath); // misma carpeta de salida
     const command = `${LO_COMMAND} --headless --convert-to pdf "${inputPath}" --outdir "${outputDir}"`;
 
@@ -17,8 +24,9 @@ const convertirWordAPdf = (inputPath) => {
         console.error("Error al convertir a PDF:", error);
         reject(error);
       } else {
-        // cambiar extensión a .pdf
-        const pdfPath = inputPath.replace(/\.(docx?|DOCX?)$/, ".pdf");
+        // Formar la ruta del PDF generado
+        const parsedPath = path.parse(inputPath);
+        const pdfPath = path.join(outputDir, parsedPath.name + ".pdf");
         resolve(pdfPath);
       }
     });

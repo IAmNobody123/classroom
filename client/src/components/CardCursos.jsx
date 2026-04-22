@@ -228,6 +228,7 @@ export default function CardCursos({
               type="file"
               id="material"
               name="material"
+              accept=".doc,.docx,.pdf,.ppt,.pptx"
               onChange={(e) => setMaterial(e.target.files[0])}
             />
           </div>
