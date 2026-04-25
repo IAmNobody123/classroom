@@ -284,8 +284,9 @@ export default function PlanTrabajo() {
               />
             </div>
             <div>
-              <label>Fecha:</label>
+              <label hidden>Fecha:</label>
               <input
+                hidden
                 readOnly
                 type="date"
                 value={fecha}
