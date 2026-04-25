@@ -21,6 +21,7 @@ export default function Registro() {
   const [codigo, setCodigo] = useState("");
   const [image, setImage] = useState(null);
   const [currentImage, setCurrentImage] = useState(0);
+  const [codeSent, setCodeSent] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -167,6 +168,7 @@ export default function Registro() {
                 />
                 <button
                   type="button"
+                  disabled={codeSent}
                   onClick={async () => {
                     if (!formData.correo) {
                       return Toast("Error", "Ingrese su correo primero", "error");
@@ -175,17 +177,18 @@ export default function Registro() {
                     try {
                       const res = await sendValidationCode(formData.correo);
                       if (res.success) {
+                        setCodeSent(true);
                         Toast("Éxito", res.message || "Código enviado a tu correo", "success");
                       } else {
                         Toast("Error", res.error || "No se pudo enviar el código", "error");
                       }
                     } catch (error) {
-                      Toast("Error", "Fallo de conexión", "error");
+                      Toast("Error", "Fallo de conexión", error);
                     }
                   }}
-                  style={{ padding: "0 15px", borderRadius: "10px", background: "#3b82f6", color: "white", border: "none", cursor: "pointer", fontWeight: "bold" }}
+                  style={{ padding: "0 15px", borderRadius: "10px", background: codeSent ? "#ccc" : "#3b82f6", color: "white", border: "none", cursor: codeSent ? "not-allowed" : "pointer", fontWeight: "bold" }}
                 >
-                  Enviar Código al Gmail
+                  {codeSent ? "Código Enviado" : "Enviar Código al Gmail"}
                 </button>
               </div>
             </div>
