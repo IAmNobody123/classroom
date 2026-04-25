@@ -168,7 +168,7 @@ export default function GestionCursos() {
                   <option value="">Seleccione una opción</option>
                   {docentes.map((docente) => (
                     <option key={docente.id} value={docente.id}>
-                      {docente.nombre}
+                      {docente.nombre} {docente.apellido}
                     </option>
                   ))}
                 </select>

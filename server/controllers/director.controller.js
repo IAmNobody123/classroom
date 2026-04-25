@@ -17,7 +17,7 @@ const getListCursos = async (req, res) => {
     process.env.BACKEND_URL || "http://localhost:5000";
   try {
     const result =
-      await pool.query(`select c.id, c.nombre as curso, c.descripcion as descripcion, d.nombre as docente ,grado, c.imagen 
+      await pool.query(`select c.id, c.nombre as curso, c.descripcion as descripcion, d.nombre || ' ' || d.apellido as docente ,grado, c.imagen 
       from clases c inner join docentes d on c.docente_id = d.id where d.estado = 'activo'`);
     const resultImage = result.rows.map((curso) => ({
       ...curso,
