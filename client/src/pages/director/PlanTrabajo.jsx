@@ -8,7 +8,6 @@ import "../../styles/docente/planTrabajo.css";
 export default function PlanTrabajoVer() {
   const [planes, setPlanes] = useState([]);
   const [search, setSearch] = useState(""); // Estado para el filtro de búsqueda
-  const [cursoFiltro, setCursoFiltro] = useState(""); // Estado para el filtro de curso
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
   const [previewHtml, setPreviewHtml] = useState("");
@@ -16,12 +15,7 @@ export default function PlanTrabajoVer() {
   const [previewTitle, setPreviewTitle] = useState("");
 
   const filteredPlanes = planes.filter((plan) => {
-    const searchMatch = plan.titulo
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const cursoMatch =
-      cursoFiltro === "" || plan.curso === cursoFiltro;
-    return searchMatch && cursoMatch;
+    return plan.titulo.toLowerCase().includes(search.toLowerCase());
   });
 
   const handleViewPlan = async (plan) => {
@@ -88,20 +82,6 @@ export default function PlanTrabajoVer() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-
-          <select
-            value={cursoFiltro}
-            onChange={(e) => setCursoFiltro(e.target.value)}
-          >
-            <option value="">Todos los cursos</option>
-            {[...new Set(planes.map((p) => p.curso))].map(
-              (curso, index) => (
-                <option key={index} value={curso}>
-                  {curso}
-                </option>
-              ),
-            )}
-          </select>
         </div>
         <table className="plan-table">
           <thead>
@@ -124,8 +104,8 @@ export default function PlanTrabajoVer() {
                     : "Sin fecha"}
                 </td>
                 <td>{p.descripcion}</td>
-                <td>{p.curso}</td>
-                <td>{p.docente}</td>
+                <td>{p.curso || "Sin curso asignado"}</td>
+                <td>{p.docente || "Sin docente"}</td>
                 <td>
                   <button
                     onClick={() => handleViewPlan(p)}

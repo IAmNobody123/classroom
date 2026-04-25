@@ -33,6 +33,7 @@ export default function PlanTrabajo() {
 
   const [fecha, setFecha] = useState(fechaLocal);
   const [cursoId, setCursoId] = useState("");
+  const [cursoNombre, setCursoNombre] = useState("");
   const [archivo, setArchivo] = useState(null);
 
   //filtros
@@ -52,6 +53,7 @@ export default function PlanTrabajo() {
     setDescripcion("");
     setFecha("");
     setCursoId("");
+    setCursoNombre("");
     setArchivo(null);
   };
 
@@ -71,6 +73,7 @@ export default function PlanTrabajo() {
     formData.append("descripcion", descripcion);
     formData.append("fecha", fecha);
     formData.append("curso_id", cursoId || "");
+    formData.append("curso_nombre", cursoNombre || "");
     formData.append("archivo", archivo);
 
     try {
@@ -84,6 +87,8 @@ export default function PlanTrabajo() {
       setTitulo("");
       setDescripcion("");
       setArchivo(null);
+      setCursoId("");
+      setCursoNombre("");
       listaPlanes(user.id);
       return;
     } catch (error) {
@@ -244,7 +249,22 @@ export default function PlanTrabajo() {
           <form className="formPlanTrabajo" onSubmit={handleSubmit}>
             <div>
               <label>Curso:</label>
-              <input type="text" value="General" disabled />
+              <select
+                value={cursoId}
+                onChange={(e) => {
+                  const selectedCurso = cursos.find(c => c.id === parseInt(e.target.value));
+                  setCursoId(e.target.value);
+                  setCursoNombre(selectedCurso ? selectedCurso.nombre : "");
+                }}
+                required
+              >
+                <option value="">Seleccione Curso</option>
+                {cursos.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nombre} - {c.grado}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label>Nombre del Material:</label>

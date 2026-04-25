@@ -94,10 +94,12 @@ const dataDashboard = async (req, res) => {
 const listAllPlanesTrabajo = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso, d.nombre as docente
-          FROM planes_trabajo p 
-          JOIN clases c ON p.curso_id = c.id
-          JOIN docentes d ON c.docente_id = d.id
+      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo,
+              c.nombre as curso,
+              d.nombre || ' ' || d.apellido as docente
+          FROM planes_trabajo p
+          LEFT JOIN clases c ON p.curso_id = c.id
+          LEFT JOIN docentes d ON c.docente_id = d.id
           `,
     );
 
