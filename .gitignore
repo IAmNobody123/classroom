@@ -12,3 +12,4 @@ server/node_modules/
 otros/classroom.sql
 
 server/uploads/
+server/controllers/registerController.js

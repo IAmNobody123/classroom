@@ -15,7 +15,7 @@ export default function PlanTrabajo() {
   const [planes, setPlanes] = useState([]);
   const [cursos, setCursos] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  cursos && console.log("Cursos del docente:", cursos);
   // Preview Modal
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
@@ -61,7 +61,7 @@ export default function PlanTrabajo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!titulo || !cursoId || !archivo) {
+    if (!titulo || !archivo) {
       alert("Complete campos obligatorios");
       return;
     }
@@ -70,7 +70,7 @@ export default function PlanTrabajo() {
     formData.append("titulo", titulo);
     formData.append("descripcion", descripcion);
     formData.append("fecha", fecha);
-    formData.append("curso_id", cursoId);
+    formData.append("curso_id", cursoId || "");
     formData.append("archivo", archivo);
 
     try {
@@ -244,18 +244,7 @@ export default function PlanTrabajo() {
           <form className="formPlanTrabajo" onSubmit={handleSubmit}>
             <div>
               <label>Curso:</label>
-              <select
-                value={cursoId}
-                onChange={(e) => setCursoId(e.target.value)}
-                required
-              >
-                <option value="">Seleccione Curso</option>
-                {cursos.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nombre}
-                  </option>
-                ))}
-              </select>
+              <input type="text" value="General" disabled />
             </div>
             <div>
               <label>Nombre del Material:</label>

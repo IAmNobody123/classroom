@@ -566,6 +566,7 @@ const getAlumnosSinNota = async (req, res) => {
 const uploadPlanTrabajo = async (req, res) => {
   try {
     const { titulo, descripcion, curso_id, fecha } = req.body;
+    const cursoId = curso_id || null;
 
     if (!req.file) {
       return res
@@ -585,7 +586,7 @@ const uploadPlanTrabajo = async (req, res) => {
     const result = await pool.query(
       `INSERT INTO planes_trabajo (titulo, descripcion, ruta_archivo, fecha, curso_id)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [titulo, descripcion, newPath, fecha || new Date(), curso_id],
+      [titulo, descripcion, newPath, fecha || new Date(), cursoId],
     );
 
     res.status(201).json({
@@ -602,11 +603,11 @@ const listPlanesTrabajo = async (req, res) => {
   const { id } = req.params;
   try {
     const result = await pool.query(
-      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, c.nombre as curso
+      `SELECT p.id, p.titulo, p.descripcion, p.fecha, p.ruta_archivo, COALESCE(c.nombre, 'General') as curso
           FROM planes_trabajo p
-          JOIN clases c ON p.curso_id = c.id
-          JOIN docentes d ON c.docente_id = d.id
-          WHERE d.usuario_id = $1`,
+          LEFT JOIN clases c ON p.curso_id = c.id
+          LEFT JOIN docentes d ON c.docente_id = d.id
+          WHERE d.usuario_id = $1 OR p.curso_id IS NULL`,
       [id],
     );
 
@@ -647,38 +648,109 @@ const getFechasAsistencia = async (req, res) => {
   }
 };
 
+function getStartOfWeek(year, week) {
+  const jan1 = new Date(year, 0, 1);
+  const dayOfWeek = jan1.getDay();
+  const firstMonday = new Date(year, 0, 1 + (8 - dayOfWeek) % 7);
+  const startOfWeek = new Date(firstMonday);
+  startOfWeek.setDate(firstMonday.getDate() + (week - 1) * 7);
+  return startOfWeek;
+}
+
 const generarReporteCurso = async (req, res) => {
-  const { cursoId, tipoReporte } = req.body;
-  console.log(cursoId, tipoReporte);
+  const { cursoId, tipoReporte, periodo, fechaSeleccionada } = req.body;
+  console.log(cursoId, tipoReporte, periodo, fechaSeleccionada);
   try {
     const cursoRes = await pool.query('SELECT nombre, grado FROM clases WHERE id = $1', [cursoId]);
     if (cursoRes.rows.length === 0) return res.status(404).json({ error: 'Curso no encontrado' });
     const curso = cursoRes.rows[0];
 
-    const alumnosRes = await pool.query(`
+    let dateFilterAsis = '';
+    let dateFilterPart = '';
+    let params = [cursoId];
+    let groupBy = '';
+    let tituloFormat = '';
+    if (periodo === 'diario') {
+      dateFilterAsis = 'AND DATE(asis.fecha) = $2';
+      dateFilterPart = 'AND DATE(p.fecha_revision) = $2';
+      params.push(fechaSeleccionada);
+      groupBy = 'DATE(asis.fecha)';
+      tituloFormat = 'date';
+    } else if (periodo === 'semanal') {
+      const [year, week] = fechaSeleccionada.split('-W');
+      const startDate = getStartOfWeek(parseInt(year), parseInt(week));
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + 6);
+      const startStr = startDate.toISOString().split('T')[0];
+      const endStr = endDate.toISOString().split('T')[0];
+      dateFilterAsis = 'AND DATE(asis.fecha) >= $2 AND DATE(asis.fecha) <= $3';
+      dateFilterPart = 'AND DATE(p.fecha_revision) >= $2 AND DATE(p.fecha_revision) <= $3';
+      params.push(startStr, endStr);
+      groupBy = 'DATE(asis.fecha)';
+      tituloFormat = 'date';
+    } else if (periodo === 'mensual') {
+      const [year, month] = fechaSeleccionada.split('-');
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0);
+      const startStr = startDate.toISOString().split('T')[0];
+      const endStr = endDate.toISOString().split('T')[0];
+      dateFilterAsis = 'AND DATE(asis.fecha) >= $2 AND DATE(asis.fecha) <= $3';
+      dateFilterPart = 'AND DATE(p.fecha_revision) >= $2 AND DATE(p.fecha_revision) <= $3';
+      params.push(startStr, endStr);
+      groupBy = "DATE_TRUNC('week', asis.fecha)";
+      tituloFormat = 'week';
+    } else if (periodo === 'todo') {
+      groupBy = "DATE_TRUNC('month', asis.fecha)";
+      tituloFormat = 'month';
+    }
+
+    const query = `
       SELECT 
+        ${groupBy} as group_key,
         a.id, a.nombre, a.apellido,
-        (
-          SELECT COALESCE(count(p.nota), 0) 
-  FROM participaciones p
-  JOIN documentos d ON p.documento_id = d.id 
-  WHERE p.alumno_id = a.id AND d.curso_id = $1
-        ) as promedio_notas,
-        (
-          SELECT COALESCE((SUM(CASE WHEN asis.presente = true THEN 1 ELSE 0 END)::float / NULLIF(COUNT(asis.id), 0)) * 100, 0) 
-          FROM asistencias asis 
-          WHERE asis.alumno_id = a.id AND asis.clase_id = $1
-        ) as porcentaje_asistencia
+        COALESCE(AVG(asis.presente::int) * 100, 0) as porcentaje_asistencia,
+        COALESCE(count(p.id), 0) as promedio_notas
       FROM alumnos a
+      LEFT JOIN asistencias asis ON asis.alumno_id = a.id AND asis.clase_id = $1 ${dateFilterAsis}
+      LEFT JOIN participaciones p ON p.alumno_id = a.id AND p.documento_id IN (SELECT id FROM documentos WHERE curso_id = $1) ${dateFilterPart}
       WHERE a.clase_id = $1
-      ORDER BY a.apellido, a.nombre
-    `, [cursoId]);
+      GROUP BY ${groupBy}, a.id, a.nombre, a.apellido
+      ORDER BY ${groupBy}, a.apellido, a.nombre
+    `;
+    const alumnosRes = await pool.query(query, params);
+
+    const grupos = {};
+    alumnosRes.rows.forEach(row => {
+      const key = row.group_key;
+      if (!grupos[key]) grupos[key] = [];
+      grupos[key].push({
+        nombre: row.nombre,
+        apellido: row.apellido,
+        porcentaje_asistencia: parseFloat(row.porcentaje_asistencia).toFixed(2),
+        promedio_notas: row.promedio_notas
+      });
+    });
+
+    const gruposArray = Object.keys(grupos).sort().map(key => {
+      let titulo = '';
+      if (tituloFormat === 'date') {
+        titulo = new Date(key).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      } else if (tituloFormat === 'week') {
+        const weekStart = new Date(key);
+        const weekEnd = new Date(weekStart);
+        weekEnd.setDate(weekStart.getDate() + 6);
+        titulo = `Semana del ${weekStart.toLocaleDateString('es-ES')} al ${weekEnd.toLocaleDateString('es-ES')}`;
+      } else if (tituloFormat === 'month') {
+        titulo = new Date(key).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+      }
+      return { titulo, alumnos: grupos[key] };
+    });
 
     res.status(200).json({
       curso: curso.nombre,
       grado: curso.grado,
       tipoReporte,
-      alumnos: alumnosRes.rows
+      grupos: gruposArray
     });
   } catch (error) {
     console.error("Error al generar reporte:", error);

@@ -55,41 +55,48 @@ export default function Juegos() {
       doc.setFontSize(14);
       doc.text(`Grado: ${resp.grado}`, 14, 30);
       doc.text(`Tipo de Reporte: ${tipoReporte.toUpperCase()}`, 14, 40);
+      doc.text("Tipo de discapacidad: TDAH",14,50)
       let periodoLabel = periodo === 'todo' ? 'Historico Completo' : periodo.charAt(0).toUpperCase() + periodo.slice(1);
       if (periodo !== 'todo' && fechaSeleccionada) {
         periodoLabel += ` (${fechaSeleccionada})`;
       }
-      doc.text(`Periodo: ${periodoLabel}`, 14, 50);
-      doc.text(`Fecha de Emision: ${new Date().toLocaleDateString()}`, 14, 60);
+      doc.text(`Periodo: ${periodoLabel}`, 14, 60);
+      doc.text(`Fecha de Emision: ${new Date().toLocaleDateString()}`, 14, 70);
 
-      let head = [];
-      let body = [];
+      resp.grupos.forEach((grupo, index) => {
+        if (index > 0) doc.addPage();
+        doc.setFontSize(16);
+        doc.text(grupo.titulo, 14, index === 0 ? 80 : 20);
 
-      if (tipoReporte === "general") {
-        head = [["Alumno", "Participaciones", "Asistencia (%)"]];
-        body = resp.alumnos.map(a => [
-          `${a.apellido}, ${a.nombre}`,
-          Number(a.promedio_notas).toFixed(2),
-          Number(a.porcentaje_asistencia).toFixed(2) + "%"
-        ]);
-      } else if (tipoReporte === "notas") {
-        head = [["Alumno", "Participaciones"]];
-        body = resp.alumnos.map(a => [
-          `${a.apellido}, ${a.nombre}`,
-          Number(a.promedio_notas).toFixed(2)
-        ]);
-      } else if (tipoReporte === "asistencia") {
-        head = [["Alumno", "Asistencia (%)"]];
-        body = resp.alumnos.map(a => [
-          `${a.apellido}, ${a.nombre}`,
-          Number(a.porcentaje_asistencia).toFixed(2) + "%"
-        ]);
-      }
+        let head = [];
+        let body = [];
 
-      autoTable(doc, {
-        startY: 70,
-        head: head,
-        body: body,
+        if (tipoReporte === "general") {
+          head = [["Alumno", "Participaciones", "Asistencia (%)"]];
+          body = grupo.alumnos.map(a => [
+            `${a.apellido}, ${a.nombre}`,
+            Number(a.promedio_notas),
+            Number(a.porcentaje_asistencia) + "%"
+          ]);
+        } else if (tipoReporte === "notas") {
+          head = [["Alumno", "Participaciones"]];
+          body = grupo.alumnos.map(a => [
+            `${a.apellido}, ${a.nombre}`,
+            Number(a.promedio_notas)
+          ]);
+        } else if (tipoReporte === "asistencia") {
+          head = [["Alumno", "Asistencia (%)"]];
+          body = grupo.alumnos.map(a => [
+            `${a.apellido}, ${a.nombre}`,
+            Number(a.porcentaje_asistencia) + "%"
+          ]);
+        }
+
+        autoTable(doc, {
+          startY: index === 0 ? 90 : 30,
+          head: head,
+          body: body,
+        });
       });
 
       doc.save(`Reporte_Curso_${resp.curso.replace(/\s+/g, '_')}_${tipoReporte}.pdf`);
